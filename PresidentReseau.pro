@@ -14,4 +14,4 @@ SOURCES += main.cpp
 
 HEADERS  +=
 
-FORMS    += mainwindow.ui
+FORMS    +=
