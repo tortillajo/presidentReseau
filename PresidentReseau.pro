@@ -10,9 +10,8 @@ TARGET = PresidentReseau
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+SOURCES += main.cpp
 
-HEADERS  += mainwindow.hpp
+HEADERS  +=
 
 FORMS    += mainwindow.ui
