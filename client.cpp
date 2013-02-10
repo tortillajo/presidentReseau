@@ -10,6 +10,7 @@ Client::Client()
      *on ajoute un deuxieme nombre sur les 32 bits faibles
      */
     m_id = (qrand() << (32)) + qrand() ; //rand
+    // lui demander son pseudo :)
 }
 
 Client::~Client()
@@ -26,9 +27,31 @@ QString Client::pseudo() const
     return m_pseudo;
 }
 
+quint16 Client::dataSize() const
+{
+    return m_dataSize;
+}
+
+QByteArray Client::data() const
+{
+    return m_data;
+}
+
 int Client::setPseudo(QString pseudo)
 {
     m_pseudo = pseudo;
+    return true;
+}
+
+int Client::setDataSize(quint16 size)
+{
+    m_dataSize = size;
+    return true;
+}
+
+int Client::setData(QByteArray d)
+{
+    m_data = d;
     return true;
 }
 
