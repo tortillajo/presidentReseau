@@ -4,14 +4,27 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core
+QT       -= gui
+QT       += network
+
+CONFIG   += console
+CONFIG   -= app_bundle
 
 TARGET = PresidentReseau
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    channel.cpp \
+    application_server.cpp \
+    client.cpp
 
-HEADERS  +=
+HEADERS  += \
+    channel.hpp \
+    application_server.hpp \
+    client.hpp
 
-FORMS    +=
+#FORMS    +=
+
+
