@@ -3,6 +3,7 @@
 #include <QtCore/QCoreApplication>
 #include <QTcpSocket>
 #include <iostream>
+#include "channel.hpp"
 
 class Client
 {
@@ -28,6 +29,8 @@ public:
 private:
     quint64 m_id;
     QString m_pseudo;
+
+    Channel *m_channel;
 
     quint16 m_dataSize; // contient la taille du message
     QByteArray m_data; // contient le message

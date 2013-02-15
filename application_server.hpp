@@ -22,7 +22,11 @@ private slots:
     int recv(int id); // recv un message  (traitement et attente du message
 
 private:
-    int processing(QByteArray m, int id); // on traite les messages recus .
+    /*
+     * erreurs :
+     * 1 : message trop court
+     */
+    int processing(QByteArray m, int id); // on traite les messages recus.
 
     //methodes privees
 private:

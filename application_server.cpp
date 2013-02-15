@@ -29,13 +29,11 @@ int Application_server::newClient()
     int id_socket = m_sockets.indexOf(socket);
     int id_client = m_clients.indexOf(client);
     int id = -1;
-    if (id_client =! id_socket)
-    {
+    if (id_client =! id_socket) {
         // TODO : gestion du probleme
         std::cout << "ERREUR : DONNEES NON-SYNCHRONISEE. DISFONCTIONNEMENT GENERAL!" << std::endl;
         return (-1);
-    } else
-    {
+    } else {
         id = id_client;
         std::cout << "AJOUT DE CLIENT DANS LES DONNES DU SERVEUR. SYNCHRONISATION OK !" << std::endl;
     }
@@ -47,7 +45,8 @@ int Application_server::newClient()
 
 int Application_server::delClient(int id)
 {
-    if (id < 0) return (-1);
+    if (id < 0)
+        return (-1);
     // on supprime dans les deux QList le numero [id]
     m_sockets.removeAt(id);
     m_clients.removeAt(id);
@@ -72,14 +71,16 @@ int Application_server::recv(int id)
     //donc on charge les 16 bits dans la taille du message
     QDataStream mess_r(m_sockets[id]);
     if (m_clients[id].dataSize() == 0) {
-        if (m_sockets[id]->bytesAvailable() < sizeof(quint16)) return (1); // attente des 16 bits
+        if (m_sockets[id]->bytesAvailable() < sizeof(quint16))
+            return (1); // attente des 16 bits
         quint16 size = m_clients[id].dataSize();
         mess_r >> size; // copie des 16 bits (taille)
         m_clients[id].setDataSize(size);
     }
 
     // on attend d'avoir tout recu
-    if (m_sockets[id]->bytesAvailable() < m_clients[id].dataSize()) return (2);
+    if (m_sockets[id]->bytesAvailable() < m_clients[id].dataSize())
+        return (2);
 
     QByteArray mess = m_clients[id].data(); // on recupere les datas stockés ? rien ?
     mess_r >> mess; // on place le stream dans les datas
@@ -89,7 +90,46 @@ int Application_server::recv(int id)
     return 0;
 }
 
+/*
+ * mess[0] :
+ *      p = request pseudo
+ *      c = request channel
+ *      g = <before/after> have joined channel
+ *      p = play
+ *
+ * p : [ p<pseudo> ]
+ * c : [ c<id> ]
+ * g : [ gb ] (liste des channels) ou [ ga<info> ] (change les params)
+ * <info> -> [ <p/g><params>:<value> ] p-> personnel g->params du chann
+ *                                    params -> nom du params val
+ * p : [ <cartes> ]
+ */
 int Application_server::processing(QByteArray m, int id)
 {
+    if (m.size() < 2) {
+        return 1;
+    } else if (m[0] == 'p') {
+        m_clients[id].setPseudo( m.right(m.size() - 1));
+        // envoyer une reponse ?
+    } else if (m[0] == 'c') {
+        //tenter de joindre le channel m.right(m.size() -1)
+    } else if (m[0] == 'g') {
+        if (m[1] == 'b') {
+            // envoyer la liste des chann
+        } else if (m[1] == 'a') {
+            // changer des params
+        }
+    } else if (m[0] == 'p') {
+        /* gestion des cartes.
+         * verifier si la carte est dans la main du joueur
+         * verifier s'il a le droit le la poser (règles + tour )
+         * poser
+         * envoyer aux autres joueurs l'information
+         * tour suivant
+         */
+    } else {
+        std::cout << "Erreur dans la lecture du flux de donnees.\n";
+    }
+
     return 0;
 }

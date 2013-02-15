@@ -12,6 +12,7 @@ CONFIG   += console
 CONFIG   -= app_bundle
 
 TARGET = PresidentReseau
+
 TEMPLATE = app
 
 
