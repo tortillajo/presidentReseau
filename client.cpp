@@ -19,46 +19,46 @@ Client::~Client()
 
 quint64 Client::id() const
 {
-    return m_id;
+    return (m_id);
 }
 
 QString Client::pseudo() const
 {
-    return m_pseudo;
+    return (m_pseudo);
 }
 
 quint16 Client::dataSize() const
 {
-    return m_dataSize;
+    return (m_dataSize);
 }
 
 QByteArray Client::data() const
 {
-    return m_data;
+    return (m_data);
 }
 
 int Client::setPseudo(QString pseudo)
 {
     m_pseudo = pseudo;
-    return true;
+    return (true);
 }
 
 int Client::setDataSize(quint16 size)
 {
     m_dataSize = size;
-    return true;
+    return (true);
 }
 
 int Client::setData(QByteArray d)
 {
     m_data = d;
-    return true;
+    return (true);
 }
 
 bool Client::operator==(Client const& client) // utile ?
 {
     if (m_id == client.id())
-        return true;
+        return (true);
     else
-        return false;
+        return (false);
 }

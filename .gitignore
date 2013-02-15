@@ -11,3 +11,8 @@
 *.lai
 *.la
 *.a
+
+# moc etc...
+moc_*
+Makefile*
+PresidentReseau.pro.user
