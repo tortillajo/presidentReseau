@@ -10,14 +10,26 @@ class Channel : QObject
     public:
         Channel();
 
+        bool clientIncluded(quint64 identifier);
+
+    private slots:
+        void clientReady(quint64 identifier, bool value);
+        bool addClient(quint64 identifier);
+        bool delClient(quint64 identifier);
+        void start();
+
+    signals:
+        void readyToBegin();
+        void channelFilled();
+
     private:
         QList< quint16> m_cards;
         /* attribuer un nombre a chaque carte ?
             en fonction de sa valeur ?
-            2 octets :
-            1er octet = valeur
+            2 quartet :
+            1er quartet = valeur
             1-10 , 11 valet , 12 dame , 13 roi ?
-            2eme octet = couleur
+            2eme quartet = couleur ( 1 2 4 8 )
             bit 1 trefle
             bit 2 pic
             bit 3 carreau
@@ -25,15 +37,16 @@ class Channel : QObject
           */
 
         //[PARAMETRES DIVERS]
-        //QVector< QString> m_params;
-        /*  n est impaire
+        QList< QString> m_params;
+        /*  n est impair
             params[n] = cle (nom du params)
-            params[n+1] = valeure de la cle
+            params[n+1] = valeur de la cle
 
           */
 
-        QList< QString> m_client_id;
-        QString m_id;
+        QList< quint64> m_client_identifier;
+        QList< bool> m_client_ready;
+        quint64 m_identifier;
         bool m_started; // -1 si termine, 0 si pas encore lance, 1 si en cours
 
 };

@@ -14,9 +14,10 @@ int Application_server::send(QByteArray m, int id)
     return (0);
 }
 
-// on accepte blabla on ajoute un client
-// ensuite on lie le signal du client (recv) avec le slot Application (proccessing)
-// TODO : gestion du probleme
+/* on accepte blabla on ajoute un client
+** ensuite on lie le signal du client (recv) avec le slot Application (proccessing)
+** TODO : gestion du probleme
+*/
 int Application_server::newClient()
 {
 
@@ -59,9 +60,11 @@ int Application_server::delClient(int id)
     return (0);
 }
 
-//si on a 0 donnes a recup, alors ca veut dire que c'est un nouveau paquet
-//donc on charge les 16 bits dans la taille du message
-// on attend d'avoir tout recu
+/*
+**si on a 0 donnes a recup, alors ca veut dire que c'est un nouveau paquet
+** donc on charge les 16 bits dans la taille du message
+** on attend d'avoir tout recu
+*/
 int Application_server::recv(int id)
 {
     QDataStream mess_r(m_sockets[id]);

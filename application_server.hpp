@@ -31,9 +31,7 @@ class Application_server : QObject
         //methodes privees
     private:
         QTcpServer* m_server;
-
         QList< Channel> m_channels;
-
         QList< Client> m_clients;
         QList< QTcpSocket*> m_sockets;
 };

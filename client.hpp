@@ -12,7 +12,7 @@ class Client
         Client();
         ~Client();
         //get methods
-        quint64 id() const;
+        quint64 identifier() const;
         QString pseudo() const;
 
         quint16 dataSize() const;
@@ -26,7 +26,7 @@ class Client
         //operator
         bool operator==(Client const& client);
     private:
-        quint64 m_id;
+        quint64 m_identifier;
         QString m_pseudo;
 
         Channel *m_channel;
