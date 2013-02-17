@@ -14,10 +14,6 @@ int Application_server::send(QByteArray m, int id)
     return (0);
 }
 
-/* on accepte blabla on ajoute un client
-** ensuite on lie le signal du client (recv) avec le slot Application (proccessing)
-** TODO : gestion du probleme
-*/
 int Application_server::newClient()
 {
 
@@ -30,7 +26,7 @@ int Application_server::newClient()
 
     int id_socket = m_sockets.indexOf(socket);
     int id_client = m_clients.indexOf(client);
-    int id = -1;
+    int id = (-1);
 
     if (id_client == id_socket)
         {
@@ -48,15 +44,27 @@ int Application_server::newClient()
     return (0);
 }
 
-/*
-** on supprime dans les deux QList le numero [id]
-*/
+
 int Application_server::delClient(int id)
 {
     if (id < 0)
         return (-1);
     m_sockets.removeAt(id);
     m_clients.removeAt(id);
+    return (0);
+}
+
+int Application_server::newChannel()
+{
+    Channel *channel;
+    m_channels.append(channel);
+}
+
+int Application_server::delChannel(int id)
+{
+    if (id < 0)
+        return (-1);
+    m_channels.removeAt(id);
     return (0);
 }
 

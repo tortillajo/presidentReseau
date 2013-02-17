@@ -17,21 +17,24 @@ class Application_server : QObject
 
         //slots
     private slots:
-        int newClient(); // accepter un nouveau client .
-        int delClient(int id); // supprimer un client .
+        int newClient();
+        int delClient(int id);
+        int newChannel();
+        int delChannel(int id);
         int recv(int id); // recv un message  (traitement et attente du message
 
     private:
         /*
-         * erreurs :
-         * 1 : message trop court
-         */
+        ** erreurs :
+        ** 1 : message trop court
+        ** 2 : prblm de synchro
+        */
         int processing(QByteArray m, int id); // on traite les messages recus.
 
         //methodes privees
     private:
         QTcpServer* m_server;
-        QList< Channel> m_channels;
+        QList< Channel*> m_channels;
         QList< Client> m_clients;
         QList< QTcpSocket*> m_sockets;
 };

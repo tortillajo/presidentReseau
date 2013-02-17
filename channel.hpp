@@ -19,6 +19,8 @@ class Channel : QObject
         void start();
 
     signals:
+        void clientAlreadyHere();
+        void clientNotHere();
         void readyToBegin();
         void channelFilled();
 
@@ -44,9 +46,10 @@ class Channel : QObject
 
           */
 
+        quint64 m_identifier;
+        QString m_title;
         QList< quint64> m_client_identifier;
         QList< bool> m_client_ready;
-        quint64 m_identifier;
         bool m_started; // -1 si termine, 0 si pas encore lance, 1 si en cours
 
 };
