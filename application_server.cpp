@@ -1,20 +1,74 @@
 #include "application_server.hpp"
 
+// CONSTRUCTEURS / DESTRUCT
 Application_server::Application_server()
 {
 }
 
-int Application_server::send(QByteArray m, int id)
+// PUBLIC
+int Application_server::findClientIdentifier(quint64 identifier)
 {
-    QByteArray paquet;
-    QDataStream mess_stream(&paquet, QIODevice::WriteOnly);
-    mess_stream << (quint16)m.size();
-    mess_stream << m;
-    m_sockets[id]->write(paquet);
-    return (0);
+    int i(0);
+    while ( i < m_clients.size())
+    {
+        if (m_clients[i].identifier() == identifier)
+        {
+            return i;
+        }
+        else
+        {
+            i++;
+        }
+    }
 }
 
-int Application_server::newClient()
+int Application_server::findChannelIdentifier(quint64 identifier)
+{
+    int i(0);
+    while ( i < m_channels.size())
+    {
+        if (m_channels[i]->identifier() == identifier)
+        {
+            return i;
+        }
+        else
+        {
+            i++;
+        }
+    }
+}
+
+// SLOTS
+
+int Application_server::send(QByteArray m, int id)
+{
+    if (id > 0)
+        {
+            QByteArray paquet;
+            QDataStream mess_stream(&paquet, QIODevice::WriteOnly);
+            mess_stream << (quint16)m.size();
+            mess_stream << m;
+            m_sockets[id]->write(paquet);
+            return(0);
+        }
+    else if (id == 0)
+        {
+            int i(0);
+            while (i < m_clients.size())
+            {
+                send(m,i);
+                i++;
+            }
+            return (0);
+        }
+    else
+        {
+            std::cout << "ERROR : ID TO SEND < 0 !!!! UNABLE TO DO THAT !\n";
+            return(-1);
+        }
+}
+
+void Application_server::newClient()
 {
 
     std::cout << "New connexion" << std::endl;
@@ -36,36 +90,36 @@ int Application_server::newClient()
     else
         {
             std::cout << "ERREUR : DONNEES NON-SYNCHRONISEE. DISFONCTIONNEMENT GENERAL!" << std::endl;
-            return(-1);
+            return;
         }
 
     connect(m_sockets[id], SIGNAL(disconnected()), this, SLOT(delClient(id)));
     connect(m_sockets[id], SIGNAL(readyRead()), this, SLOT(recv(id)));
-    return (0);
+    return;
 }
 
 
-int Application_server::delClient(int id)
+void Application_server::delClient(int id)
 {
     if (id < 0)
-        return (-1);
+        return;
     m_sockets.removeAt(id);
     m_clients.removeAt(id);
-    return (0);
+    return;
 }
 
-int Application_server::newChannel()
+void Application_server::newChannel()
 {
     Channel *channel;
     m_channels.append(channel);
 }
 
-int Application_server::delChannel(int id)
+void Application_server::delChannel(int id)
 {
     if (id < 0)
-        return (-1);
+        return;
     m_channels.removeAt(id);
-    return (0);
+    return;
 }
 
 /*
@@ -73,28 +127,48 @@ int Application_server::delChannel(int id)
 ** donc on charge les 16 bits dans la taille du message
 ** on attend d'avoir tout recu
 */
-int Application_server::recv(int id)
+void Application_server::recv(int id)
 {
     QDataStream mess_r(m_sockets[id]);
     if (m_clients[id].dataSize() == 0)
         {
             if (m_sockets[id]->bytesAvailable() < sizeof(quint16))
-                return (1); // attente des 16 bits
+                return; // attente des 16 bits
             quint16 size = m_clients[id].dataSize();
             mess_r >> size; // copie des 16 bits (taille)
             m_clients[id].setDataSize(size);
         }
 
     if (m_sockets[id]->bytesAvailable() < m_clients[id].dataSize())
-        return (2);
+        return;
 
     QByteArray mess = m_clients[id].data();
     mess_r >> mess;
     m_clients[id].setData(mess);
     m_clients[id].setDataSize(0);
     processing(m_clients[id].data(), id);
-    return 0;
+    return;
 }
+
+void Application_server::channelSendToClient(QString m, quint64 identifier)
+{
+    int i(0);
+    if (identifier == 0)
+        {
+            while (i < m_clients.size())
+            {
+                this->send(m.toAscii(), i);
+                i++;
+            }
+        }
+    else
+        {
+            this->send(m.toAscii(), findClientIdentifier(identifier));
+        }
+    return;
+}
+
+// PRIVATE
 
 /*
 ** mess[0] :

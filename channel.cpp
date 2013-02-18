@@ -11,7 +11,23 @@ Channel::Channel()
 {
     m_identifier = (qrand() << (32)) + qrand() ;
 }
-bool Channel::clientIncluded(quint64 identifier)
+
+quint64 Channel::identifier() const
+{
+    return (m_identifier);
+}
+
+QString Channel::title() const
+{
+    return (m_title);
+}
+
+int Channel::howManyClient() const
+{
+    return (m_client_identifier.size());
+}
+
+bool Channel::clientIncluded(quint64 identifier) const
 {
     for (int i=0; i < m_client_identifier.size(); i++)
         {

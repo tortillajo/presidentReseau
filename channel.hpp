@@ -9,8 +9,10 @@ class Channel : QObject
 
     public:
         Channel();
-
-        bool clientIncluded(quint64 identifier);
+        quint64 identifier() const;
+        QString title() const;
+        int howManyClient() const;
+        bool clientIncluded(quint64 identifier) const;
 
     private slots:
         void clientReady(quint64 identifier, bool value);
@@ -23,6 +25,7 @@ class Channel : QObject
         void clientNotHere();
         void readyToBegin();
         void channelFilled();
+        void sendToClient(quint64,QString);
 
     private:
         QList< quint16> m_cards;

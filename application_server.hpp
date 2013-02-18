@@ -13,15 +13,19 @@ class Application_server : QObject
     //methodes publiques
     public:
         Application_server();
-        int send(QByteArray m, int id); // envoyer un message m a id
+        int send(QByteArray m, int id);
+        int findClientIdentifier(quint64 identifier);
+        int findChannelIdentifier(quint64 identifier);
 
         //slots
     private slots:
-        int newClient();
-        int delClient(int id);
-        int newChannel();
-        int delChannel(int id);
-        int recv(int id); // recv un message  (traitement et attente du message
+        void newClient();
+        void delClient(int id);
+        void newChannel();
+        void delChannel(int id);
+        void recv(int id);
+        void channelSendToClient(QString m, quint64 identifier);
+        // TODO lors de la creation de chann, lier le signal a ce slot
 
     private:
         /*
