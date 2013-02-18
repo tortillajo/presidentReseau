@@ -21,11 +21,15 @@ class Channel : QObject
         void start();
 
     signals:
-        void clientAlreadyHere();
-        void clientNotHere();
+        void clientAlreadyHere(quint64);
+        // TODO : SLOT = channelSendToClient -> A la creation du channel
+        void clientNotHere(quint64);
+        // TODO : SLOT = channelSendToClient
+        void channelFilled(quint64);
+        // TODO : SLOT = channelSendToClient
         void readyToBegin();
-        void channelFilled();
         void sendToClient(quint64,QString);
+        // TODO : SLOT = channelSendToClient
 
     private:
         QList< quint16> m_cards;

@@ -13,13 +13,14 @@ int Application_server::findClientIdentifier(quint64 identifier)
     {
         if (m_clients[i].identifier() == identifier)
         {
-            return i;
+            return (i);
         }
         else
         {
             i++;
         }
     }
+    return (-1);
 }
 
 int Application_server::findChannelIdentifier(quint64 identifier)
@@ -29,13 +30,14 @@ int Application_server::findChannelIdentifier(quint64 identifier)
     {
         if (m_channels[i]->identifier() == identifier)
         {
-            return i;
+            return (i);
         }
         else
         {
             i++;
         }
     }
+    return (-1);
 }
 
 // SLOTS

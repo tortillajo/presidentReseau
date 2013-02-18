@@ -10,6 +10,8 @@
 Channel::Channel()
 {
     m_identifier = (qrand() << (32)) + qrand() ;
+    connect(this, SIGNAL(readyToBegin()), this, SLOT(start()));
+
 }
 
 quint64 Channel::identifier() const
@@ -48,7 +50,7 @@ bool Channel::addClient(quint64 identifier)
     if (!clientIncluded(identifier))
         {
             std::cout << "ERROR : CLIENT ALREADY PRESENT ON THIS CHANNEL.\n";
-            emit clientAlreadyHere();
+            emit clientAlreadyHere(identifier);
             return (false);
         }
     else
@@ -72,7 +74,7 @@ bool Channel::delClient(quint64 identifier)
     else
         {
             std::cout << "ERROR : CLIENT NOT PRESENT ON THIS CHANNEL.\n";
-            emit clientNotHere();
+            emit clientNotHere(identifier);
             return (false);
         }
     return (false);
