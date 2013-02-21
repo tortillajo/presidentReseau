@@ -14,5 +14,5 @@
 
 # moc etc...
 moc_*
-Makefile*
+#Makefile
 PresidentReseau.pro.user

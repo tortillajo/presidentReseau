@@ -6,7 +6,7 @@
 #include "channel.hpp"
 #include "client.hpp"
 
-class Application_server : QObject
+class Application_server : public QObject
 {
     Q_OBJECT
 
@@ -21,6 +21,7 @@ class Application_server : QObject
     private slots:
         void newClient();
         void delClient(int id);
+
         void newChannel();
         void delChannel(int id);
         void recv(int id);

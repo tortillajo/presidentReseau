@@ -114,6 +114,8 @@ void Application_server::newChannel()
 {
     Channel *channel;
     m_channels.append(channel);
+    connect(m_channels.last(), SIGNAL(channelFilled(QString,quint64)), this, SLOT(channelSendToClient(QString,quint64)));
+    return;
 }
 
 void Application_server::delChannel(int id)
@@ -178,13 +180,15 @@ void Application_server::channelSendToClient(QString m, quint64 identifier)
 **      c = request channel
 **      g = <before/after> have joined channel
 **      p = play
+**      e = erreur
 **
 ** p : [ p<pseudo> ]
 ** c : [ c<id> ]
 ** g : [ gb ] (liste des channels) ou [ ga<info> ] (change les params)
 ** <info> -> [ <p/g><params>:<value> ] p-> personnel g->params du chann
 **                                    params -> nom du params val
-** p : [ <cartes> ]
+** p : [ p<cartes> ]
+** e : [ e<num> ]
  */
 int Application_server::processing(QByteArray m, int id)
 {

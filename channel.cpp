@@ -50,7 +50,7 @@ bool Channel::addClient(quint64 identifier)
     if (!clientIncluded(identifier))
         {
             std::cout << "ERROR : CLIENT ALREADY PRESENT ON THIS CHANNEL.\n";
-            emit clientAlreadyHere(identifier);
+            emit clientAlreadyHere("0xff11",identifier);
             return (false);
         }
     else
@@ -74,7 +74,7 @@ bool Channel::delClient(quint64 identifier)
     else
         {
             std::cout << "ERROR : CLIENT NOT PRESENT ON THIS CHANNEL.\n";
-            emit clientNotHere(identifier);
+            emit clientNotHere("0xff12",identifier);
             return (false);
         }
     return (false);

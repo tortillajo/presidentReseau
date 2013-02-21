@@ -3,7 +3,7 @@
 #include <QtCore/QCoreApplication>
 #include <iostream>
 
-class Channel : QObject
+class Channel : public QObject
 {
     Q_OBJECT
 
@@ -21,14 +21,14 @@ class Channel : QObject
         void start();
 
     signals:
-        void clientAlreadyHere(quint64);
+        void clientAlreadyHere(QString,quint64);
         // TODO : SLOT = channelSendToClient -> A la creation du channel
-        void clientNotHere(quint64);
+        void clientNotHere(QString,quint64);
         // TODO : SLOT = channelSendToClient
-        void channelFilled(quint64);
+        void channelFilled(QString,quint64);
         // TODO : SLOT = channelSendToClient
         void readyToBegin();
-        void sendToClient(quint64,QString);
+        void sendToClient(QString,quint64);
         // TODO : SLOT = channelSendToClient
 
     private:
