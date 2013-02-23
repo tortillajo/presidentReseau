@@ -14,8 +14,8 @@ class Application_server : public QObject
     public:
         Application_server();
         int send(QByteArray m, int id);
-        int findClientIdentifier(quint64 identifier);
-        int findChannelIdentifier(quint64 identifier);
+        int findClientId(quint64 identifier);
+        int findChannelId(quint64 identifier);
 
         //slots
     private slots:
@@ -33,6 +33,9 @@ class Application_server : public QObject
         ** erreurs :
         ** 1 : message trop court
         ** 2 : prblm de synchro
+        **
+        ** 0xff11 :
+        ** 0xff12 :
         */
         int processing(QByteArray m, int id); // on traite les messages recus.
 

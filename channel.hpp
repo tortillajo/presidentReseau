@@ -9,10 +9,12 @@ class Channel : public QObject
 
     public:
         Channel();
+        QList< quint64> listClientIdentifier();
         quint64 identifier() const;
         QString title() const;
         int howManyClient() const;
         bool clientIncluded(quint64 identifier) const;
+        int findClientId(quint64 identifier);
 
     private slots:
         void clientReady(quint64 identifier, bool value);
@@ -21,12 +23,7 @@ class Channel : public QObject
         void start();
 
     signals:
-        void clientAlreadyHere(QString,quint64);
-        // TODO : SLOT = channelSendToClient -> A la creation du channel
-        void clientNotHere(QString,quint64);
-        // TODO : SLOT = channelSendToClient
-        void channelFilled(QString,quint64);
-        // TODO : SLOT = channelSendToClient
+        void sendClient(QString,quint64);
         void readyToBegin();
         void sendToClient(QString,quint64);
         // TODO : SLOT = channelSendToClient

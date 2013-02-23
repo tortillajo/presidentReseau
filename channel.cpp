@@ -14,6 +14,11 @@ Channel::Channel()
 
 }
 
+QList< quint64> Channel::listClientIdentifier()
+{
+    return (m_client_identifier);
+}
+
 quint64 Channel::identifier() const
 {
     return (m_identifier);
@@ -39,9 +44,25 @@ bool Channel::clientIncluded(quint64 identifier) const
     return (false);
 }
 
+int Channel::findClientId(quint64 identifier)
+{
+    int i(0);
+    while ( i < m_client_identifier.size())
+    {
+        if (m_client_identifier[i] == identifier)
+        {
+            return (i);
+        }
+        else
+        {
+            i++;
+            return (-1);
+        }
+    }
+}
 void Channel::clientReady(quint64 identifier, bool value)
 {
-    m_client_ready[identifier] = value;
+    m_client_ready[findClientId(identifier)] = value;
     return;
 }
 
@@ -49,17 +70,17 @@ bool Channel::addClient(quint64 identifier)
 {
     if (!clientIncluded(identifier))
         {
-            std::cout << "ERROR : CLIENT ALREADY PRESENT ON THIS CHANNEL.\n";
-            emit clientAlreadyHere("0xff11",identifier);
+            std::cout << "ERROR : CLIENT IS ALREADY PRESENT ON THIS CHANNEL.\n";
+            emit sendClient("0xff11",identifier);
             return (false);
         }
     else
         {
             m_client_identifier.append(identifier);
             m_client_ready.append(false);
+            emit sendClient("",identifier); // TODO : envoyer un message
             return (true);
         }
-    return (false);
 }
 
 bool Channel::delClient(quint64 identifier)
@@ -73,8 +94,8 @@ bool Channel::delClient(quint64 identifier)
         }
     else
         {
-            std::cout << "ERROR : CLIENT NOT PRESENT ON THIS CHANNEL.\n";
-            emit clientNotHere("0xff12",identifier);
+            std::cout << "ERROR : CLIENT IS NOT PRESENT ON THIS CHANNEL.\n";
+            emit sendClient("0xff12",identifier);
             return (false);
         }
     return (false);
