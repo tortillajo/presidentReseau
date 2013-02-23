@@ -13,19 +13,22 @@ class Application_server : public QObject
     //methodes publiques
     public:
         Application_server();
-        int send(QByteArray m, int id);
-        int findClientId(quint64 identifier);
-        int findChannelId(quint64 identifier);
+        int sendClient(QByteArray m, int id_client);
+        int sendChannel(QByteArray m, int id_channel);
+        int findClientId(quint64 client_identifier);
+        int findChannelId(quint64 channel_identifier);
+        int findChannelAmongClient(quint64 client_identifier);
+        //int findClientAmongChannel();
 
         //slots
     private slots:
         void newClient();
-        void delClient(int id);
+        void delClient(int id_client);
 
         void newChannel();
-        void delChannel(int id);
-        void recv(int id);
-        void channelSendToClient(QString m, quint64 identifier);
+        void delChannel(int id_channel);
+        void recv(int id_client);
+        void channelSendToClient(QString m, quint64 channel_identifier);
         // TODO lors de la creation de chann, lier le signal a ce slot
 
     private:
@@ -37,7 +40,7 @@ class Application_server : public QObject
         ** 0xff11 :
         ** 0xff12 :
         */
-        int processing(QByteArray m, int id); // on traite les messages recus.
+        int processing(QByteArray m, int id_client); // on traite les messages recus.
 
         //methodes privees
     private:
