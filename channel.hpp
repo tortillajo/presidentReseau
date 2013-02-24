@@ -13,13 +13,13 @@ class Channel : public QObject
         quint64 identifier() const;
         QString title() const;
         int howManyClient() const;
-        bool clientIncluded(quint64 identifier) const;
-        int findClientId(quint64 identifier);
+        bool clientIncluded(quint64 client_identifier) const;
+        int findClientId(quint64 client_identifier);
 
     private slots:
-        void clientReady(quint64 identifier, bool value);
-        bool addClient(quint64 identifier);
-        bool delClient(quint64 identifier);
+        void clientReady(quint64 client_identifier, bool value);
+        bool addClient(quint64 client_identifier);
+        bool delClient(quint64 client_identifier);
         void start();
 
     signals:

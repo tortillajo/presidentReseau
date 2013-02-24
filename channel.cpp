@@ -14,42 +14,60 @@ Channel::Channel()
 
 }
 
+/*
+** renvoie la liste des identifiants des clients du channel
+*/
 QList< quint64> Channel::listClientIdentifier()
 {
     return (m_client_identifier);
 }
 
+/*
+** identifiant du channel
+*/
 quint64 Channel::identifier() const
 {
     return (m_identifier);
 }
 
+/*
+** titre
+*/
 QString Channel::title() const
 {
     return (m_title);
 }
 
+/*
+** combien le channel possede-t'il de client ?
+*/
 int Channel::howManyClient() const
 {
     return (m_client_identifier.size());
 }
 
-bool Channel::clientIncluded(quint64 identifier) const
+/*
+** le client est-il déjà présent dans le chann ?
+*/
+bool Channel::clientIncluded(quint64 client_identifier) const
 {
     for (int i=0; i < m_client_identifier.size(); i++)
         {
-            if (identifier == m_client_identifier[i] )
+            if (client_identifier == m_client_identifier[i] )
                 return (true);
         }
     return (false);
 }
 
-int Channel::findClientId(quint64 identifier)
+/*
+** trouver l'id(dans le channel) du client a partir de son identifiant
+*/
+int Channel::findClientId(quint64 client_identifier)
 {
     int i(0);
     while ( i < m_client_identifier.size())
     {
-        if (m_client_identifier[i] == identifier)
+        if (m_client_identifier[i] == client_identifier)
         {
             return (i);
         }
@@ -60,34 +78,40 @@ int Channel::findClientId(quint64 identifier)
         }
     }
 }
-void Channel::clientReady(quint64 identifier, bool value)
+void Channel::clientReady(quint64 client_identifier, bool value)
 {
-    m_client_ready[findClientId(identifier)] = value;
+    m_client_ready[findClientId(client_identifier)] = value;
     return;
 }
 
-bool Channel::addClient(quint64 identifier)
+/*
+** ajouter un client s'il n'est pas déjà là. Sinon envoyer une erreur au client et ne pas ajouter.
+*/
+bool Channel::addClient(quint64 client_identifier)
 {
-    if (!clientIncluded(identifier))
+    if (!clientIncluded(client_identifier))
         {
             std::cout << "ERROR : CLIENT IS ALREADY PRESENT ON THIS CHANNEL.\n";
-            emit sendClient("0xff11",identifier);
+            emit sendClient("0xff11",client_identifier);
             return (false);
         }
     else
         {
-            m_client_identifier.append(identifier);
+            m_client_identifier.append(client_identifier);
             m_client_ready.append(false);
-            emit sendClient("",identifier); // TODO : envoyer un message
+            emit sendClient("",client_identifier); // TODO : envoyer un message
             return (true);
         }
 }
 
-bool Channel::delClient(quint64 identifier)
+/*
+** Supprimer le client uniquement s'il est présent, sinon erreur et envoyer le message eau client.
+*/
+bool Channel::delClient(quint64 client_identifier)
 {
-    if (!clientIncluded(identifier))
+    if (clientIncluded(client_identifier))
         {
-            int id = m_client_identifier.indexOf(identifier);
+            int id = m_client_identifier.indexOf(client_identifier);
             m_client_identifier.removeAt(id);
             m_client_ready.removeAt(id);
             return (true);
@@ -95,12 +119,15 @@ bool Channel::delClient(quint64 identifier)
     else
         {
             std::cout << "ERROR : CLIENT IS NOT PRESENT ON THIS CHANNEL.\n";
-            emit sendClient("0xff12",identifier);
+            emit sendClient("0xff12",client_identifier);
             return (false);
         }
     return (false);
 }
 
+/*
+** lancement de la partie. Gestion des coups etc..
+*/
 void Channel::start()
 {
 
