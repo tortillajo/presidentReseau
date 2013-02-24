@@ -15,6 +15,7 @@ class Channel : public QObject
         int howManyClient() const;
         bool clientIncluded(quint64 client_identifier) const;
         int findClientId(quint64 client_identifier);
+        bool clientAreReady();
 
     private slots:
         void clientReady(quint64 client_identifier, bool value);

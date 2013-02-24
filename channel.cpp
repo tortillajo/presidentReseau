@@ -11,7 +11,6 @@ Channel::Channel()
 {
     m_identifier = (qrand() << (32)) + qrand() ;
     connect(this, SIGNAL(readyToBegin()), this, SLOT(start()));
-
 }
 
 /*
@@ -78,9 +77,27 @@ int Channel::findClientId(quint64 client_identifier)
         }
     }
 }
+
+/*
+** dit si tous les clients sont prets ou non.
+*/
+bool Channel::clientAreReady()
+{
+    for (int i=0; i < m_client_ready.size(); i++)
+    {
+        if (m_client_ready[i] == false)
+            return (false);
+    }
+    return (true);
+}
+
 void Channel::clientReady(quint64 client_identifier, bool value)
 {
     m_client_ready[findClientId(client_identifier)] = value;
+    if (clientAreReady())
+    {
+        emit readyToBegin();
+    }
     return;
 }
 

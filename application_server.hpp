@@ -33,12 +33,14 @@ class Application_server : public QObject
 
     private:
         /*
-        ** erreurs :
-        ** 1 : message trop court
+        ** erreurs (note : le client n'est pas forcement en faute.
+        **                 les erreurs sont informatives et peuvent ne
+        **                  pas poser de problèmes. )
+        ** 1 : message trop court (ctb thibaut)
         ** 2 : prblm de synchro
         **
-        ** 0xff11 :
-        ** 0xff12 :
+        ** 0xff11 : client déjà present dans le channel
+        ** 0xff12 : client non present dans le channel
         */
         int processing(QByteArray m, int id_client); // on traite les messages recus.
 
