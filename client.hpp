@@ -31,5 +31,19 @@ class Client
         Channel *m_channel;
         quint16 m_dataSize; // contient la taille du message
         QByteArray m_data; // contient le message
+
+        QList< quint16> m_cards;
+        /* attribuer un nombre a chaque carte ?
+            en fonction de sa valeur ?
+            2 quartet :
+            1er quartet = valeur
+            1-10 , 11 valet , 12 dame , 13 roi ?
+            2eme quartet = couleur ( 1 2 4 8 )
+            bit 1 trefle
+            bit 2 pic
+            bit 3 carreau
+            bit 4 coeur ?
+          */
+
 };
 #endif // CLIENT_HPP

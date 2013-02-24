@@ -6,6 +6,9 @@ Application_server::Application_server()
 }
 
 // PUBLIC
+/*
+** trouver un id de client a partir de l'identifier
+*/
 int Application_server::findClientId(quint64 client_identifier)
 {
     int i(0);
@@ -23,6 +26,9 @@ int Application_server::findClientId(quint64 client_identifier)
     return (-1);
 }
 
+/*
+** trouver un id de channel avec sont identifier
+*/
 int Application_server::findChannelId(quint64 channel_identifier)
 {
     int i(0);
@@ -40,6 +46,9 @@ int Application_server::findChannelId(quint64 channel_identifier)
     return (-1);
 }
 
+/*
+** trouver l'id du channel auqeuel apartient le client
+*/
 int Application_server::findChannelAmongClient(quint64 client_identifier)
 {
     for (int i=0; i < m_channels.size(); i++)
@@ -49,7 +58,7 @@ int Application_server::findChannelAmongClient(quint64 client_identifier)
             return (i);
         }
     }
-    return (0);
+    return (-1);
 }
 
 // SLOTS
@@ -110,6 +119,9 @@ int Application_server::sendChannel(QByteArray m, int id_channel)
     }
 }
 
+/*
+**
+*/
 void Application_server::newClient()
 {
 
@@ -140,7 +152,9 @@ void Application_server::newClient()
     return;
 }
 
-
+/*
+**
+*/
 void Application_server::delClient(int id_client)
 {
     if (id_client < 0)
@@ -150,6 +164,9 @@ void Application_server::delClient(int id_client)
     return;
 }
 
+/*
+**
+*/
 void Application_server::newChannel()
 {
     Channel *channel;
@@ -158,6 +175,9 @@ void Application_server::newChannel()
     return;
 }
 
+/*
+**
+*/
 void Application_server::delChannel(int id_channel)
 {
     if (id_channel < 0)
@@ -248,6 +268,7 @@ void Application_server::channelSendToClient(QString m, quint64 channel_identifi
  */
 int Application_server::processing(QByteArray m, int id_client)
 {
+    int id_channel = findChannelAmongClient(m_clients[id_client].identifier());
     if (m.size() < 2)
     {
         return (1);
@@ -261,16 +282,22 @@ int Application_server::processing(QByteArray m, int id_client)
     }
     else if (m[0] == 'c')
     {
-        //tenter de joindre le channel m.right(m.size() -1)
+        if (id_channel > -1)
+        {
+            std::cout << "ERREUR : CLIENT DEJA CONNECTE!\n";
+            // TODO : Deconnecter du channel
+        }
+
+        // TODO : tenter de joindre le channel m.right(m.size() -1)
     }
     else if (m[0] == 'g')
     {
         if (m[1] == 'b')
         {
-            // envoyer la liste des chann
+            // TODO : envoyer la liste des chann
         } else if (m[1] == 'a')
         {
-            // changer des params
+            // TODO : changer des params
         }
     }
     else if (m[0] == 'p')

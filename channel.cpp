@@ -11,6 +11,9 @@ Channel::Channel()
 {
     m_identifier = (qrand() << (32)) + qrand() ;
     connect(this, SIGNAL(readyToBegin()), this, SLOT(start()));
+    m_params << "nclients";
+    m_params << "4";
+    // TODO : Ajouter des params
 }
 
 /*
