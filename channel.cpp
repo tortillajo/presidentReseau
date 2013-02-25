@@ -94,16 +94,6 @@ bool Channel::clientAreReady()
     return (true);
 }
 
-void Channel::clientReady(quint64 client_identifier, bool value)
-{
-    m_client_ready[findClientId(client_identifier)] = value;
-    if (clientAreReady())
-    {
-        emit readyToBegin();
-    }
-    return;
-}
-
 /*
 ** ajouter un client s'il n'est pas déjà là. Sinon envoyer une erreur au client et ne pas ajouter.
 */
@@ -143,6 +133,19 @@ bool Channel::delClient(quint64 client_identifier)
             return (false);
         }
     return (false);
+}
+
+/*
+** Le client devient ou non pr^et
+*/
+void Channel::clientReady(quint64 client_identifier, bool value)
+{
+    m_client_ready[findClientId(client_identifier)] = value;
+    if (clientAreReady())
+    {
+        emit readyToBegin();
+    }
+    return;
 }
 
 /*

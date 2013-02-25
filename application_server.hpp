@@ -18,7 +18,6 @@ class Application_server : public QObject
         int findClientId(quint64 client_identifier);
         int findChannelId(quint64 channel_identifier);
         int findChannelAmongClient(quint64 client_identifier);
-        //int findClientAmongChannel();
 
         //slots
     private slots:
@@ -42,6 +41,7 @@ class Application_server : public QObject
         ** 0xff11 : client déjà present dans le channel
         ** 0xff12 : client non present dans le channel
         */
+        void clientJoinChannel(quint64 client_identifier,quint64 channel_identifier);
         int processing(QByteArray m, int id_client); // on traite les messages recus.
 
         //methodes privees

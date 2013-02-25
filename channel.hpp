@@ -16,11 +16,11 @@ class Channel : public QObject
         bool clientIncluded(quint64 client_identifier) const;
         int findClientId(quint64 client_identifier);
         bool clientAreReady();
+        bool addClient(quint64 client_identifier);
+        bool delClient(quint64 client_identifier);
 
     private slots:
         void clientReady(quint64 client_identifier, bool value);
-        bool addClient(quint64 client_identifier);
-        bool delClient(quint64 client_identifier);
         void start();
 
     signals:
