@@ -239,12 +239,12 @@ void Application_server::channelSendToClient(QString m, quint64 channel_identifi
 */
 void Application_server::clientJoinChannel(quint64 client_identifier, quint64 channel_identifier)
 {
-    int id_channel = m_channels[findChannelId(channel_identifier)];
-    int id_client = m_clients[findClientId(client_identifier)];
+    int id_channel = findChannelId(channel_identifier);
+    int id_client = findClientId(client_identifier);
     if (id_channel > -1)
     {
         std::cout << "ERREUR : CLIENT DEJA CONNECTE!\n";
-        m_channels[id_channel]->delClient(identifier_client);
+        m_channels[id_channel]->delClient(client_identifier);
     }
     if (m_channels[id_channel])
     {
@@ -261,7 +261,7 @@ void Application_server::clientJoinChannel(quint64 client_identifier, quint64 ch
 **      p = play
 **      e = erreur
 **
-** p : [ p<pseudo> ]
+** i : [ i<pseudo> ]
 ** c : [ c<id> ]
 ** g : [ gb ] (liste des channels) ou
 **     [ ga<info> ] (change les params)
@@ -291,7 +291,7 @@ int Application_server::processing(QByteArray m, int id_client)
     {
         return (1);
     }
-    else if (m[0] == 'p')
+    else if (m[0] == 'i')
     {
         QByteArray pseudo = m.right(m.size() - 1);
         m_clients[id_client].setPseudo(pseudo);
