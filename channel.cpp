@@ -10,10 +10,10 @@
 Channel::Channel()
 {
     m_identifier = (qrand() << (32)) + qrand() ;
-    connect(this, SIGNAL(readyToBegin()), this, SLOT(start()));
     m_params << "nclients";
     m_params << "4";
     // TODO : Ajouter des params
+    connect(this, SIGNAL(readyToBegin()), this, SLOT(start()));
 }
 
 /*
@@ -53,11 +53,16 @@ int Channel::howManyClient() const
 */
 bool Channel::clientIncluded(quint64 client_identifier) const
 {
-    for (int i=0; i < m_client_identifier.size(); i++)
-        {
-            if (client_identifier == m_client_identifier[i] )
-                return (true);
-        }
+    int i;
+
+    i = 0;
+
+    while (i < m_client_identifier.size())
+    {
+        if (client_identifier == m_client_identifier[i] )
+            return (true);
+        i++;
+    }
     return (false);
 }
 
@@ -66,7 +71,10 @@ bool Channel::clientIncluded(quint64 client_identifier) const
 */
 int Channel::findClientId(quint64 client_identifier)
 {
-    int i(0);
+    int i;
+
+    i = 0;
+
     while ( i < m_client_identifier.size())
     {
         if (m_client_identifier[i] == client_identifier)
@@ -78,6 +86,7 @@ int Channel::findClientId(quint64 client_identifier)
             i++;
             return (-1);
         }
+        i++;
     }
 }
 
@@ -86,10 +95,15 @@ int Channel::findClientId(quint64 client_identifier)
 */
 bool Channel::clientAreReady()
 {
-    for (int i=0; i < m_client_ready.size(); i++)
+    int i;
+
+    i = 0;
+
+    while (i < m_client_ready.size())
     {
         if (m_client_ready[i] == false)
             return (false);
+        i++;
     }
     return (true);
 }
@@ -100,18 +114,18 @@ bool Channel::clientAreReady()
 bool Channel::addClient(quint64 client_identifier)
 {
     if (!clientIncluded(client_identifier))
-        {
-            std::cout << "ERROR : CLIENT IS ALREADY PRESENT ON THIS CHANNEL.\n";
-            emit sendClient("0xff11",client_identifier);
-            return (false);
-        }
+    {
+        std::cout << "ERROR : CLIENT IS ALREADY PRESENT ON THIS CHANNEL.\n";
+        emit sendClient("0xff11",client_identifier);
+        return (false);
+    }
     else
-        {
-            m_client_identifier.append(client_identifier);
-            m_client_ready.append(false);
-            emit sendClient("",client_identifier); // TODO : envoyer un message
-            return (true);
-        }
+    {
+        m_client_identifier.append(client_identifier);
+        m_client_ready.append(false);
+        emit sendClient("",client_identifier); // TODO : envoyer un message
+        return (true);
+    }
 }
 
 /*
@@ -120,18 +134,19 @@ bool Channel::addClient(quint64 client_identifier)
 bool Channel::delClient(quint64 client_identifier)
 {
     if (clientIncluded(client_identifier))
-        {
-            int id = m_client_identifier.indexOf(client_identifier);
-            m_client_identifier.removeAt(id);
-            m_client_ready.removeAt(id);
-            return (true);
-        }
+    {
+        int id;
+
+        id = m_client_identifier.indexOf(client_identifier);
+        m_client_identifier.removeAt(id);
+        m_client_ready.removeAt(id);
+        return (true);
+    }
     else
-        {
-            std::cout << "ERROR : CLIENT IS NOT PRESENT ON THIS CHANNEL.\n";
-            emit sendClient("0xff12",client_identifier);
-            return (false);
-        }
+    {
+        std::cout << "ERROR : CLIENT IS NOT PRESENT ON THIS CHANNEL.\n";
+        return (false);
+    }
     return (false);
 }
 
@@ -141,6 +156,7 @@ bool Channel::delClient(quint64 client_identifier)
 void Channel::clientReady(quint64 client_identifier, bool value)
 {
     m_client_ready[findClientId(client_identifier)] = value;
+
     if (clientAreReady())
     {
         emit readyToBegin();
