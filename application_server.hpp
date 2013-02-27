@@ -40,6 +40,7 @@ class Application_server : public QObject
         **
         ** 0xff11 : client déjà present dans le channel
         ** 0xff12 : client non present dans le channel
+        ** 0xff13 : max client atteint dans le channel
         */
         void clientJoinChannel(quint64 client_identifier, quint64 channel_identifier);
         void clientLeaveChannel(quint64 client_identifier, quint64 channel_identifier);

@@ -208,7 +208,7 @@ void Application_server::delChannel(int id_channel)
 }
 
 /*
-**si on a 0 donnes a recup, alors ca veut dire que c'est un nouveau paquet
+** si on a 0 donnes a recup, alors ca veut dire que c'est un nouveau paquet
 ** donc on charge les 16 bits dans la taille du message
 ** on attend d'avoir tout recu
 */
@@ -248,13 +248,13 @@ void Application_server::channelSendToClient(QString m, quint64 channel_identifi
     if (channel_identifier == 0)
     {
         QList< quint64> identifierList;
+        int i;
+
         identifierList = m_channels[findChannelId(channel_identifier)]->listClientIdentifier();
+        i = 0;
+
         while (i < identifierList.size())
         {
-            int i;
-
-            i = 0;
-
             this->sendClient(m.toAscii(), findClientId(identifierList[i]));
             i++;
         }
@@ -353,7 +353,6 @@ int Application_server::processing(QByteArray m, int id_client)
 
         m_clients[id_client].setPseudo(pseudo);
         sendChannel("cc:pseudo:" + pseudo, identifier_channel);
-
     }
     else if (m[0] == 'c')
     {
@@ -364,7 +363,8 @@ int Application_server::processing(QByteArray m, int id_client)
         if (m[1] == 'b')
         {
             // TODO : envoyer la liste des chann
-        } else if (m[1] == 'a')
+        }
+        else if (m[1] == 'a')
         {
             // TODO : changer des params
         }

@@ -6,12 +6,18 @@
 ** on genere un nombre sur 32 bits -> bits faibles.
 ** On roll << gauche pour avoir les 32 bits forts occupes
 ** on ajoute un deuxieme nombre sur les 32 bits faibles
+**
+** m_params contient les valeurs :
+** [1] nclientsmax
+** [3] nclientsconnected
  */
 Channel::Channel()
 {
     m_identifier = (qrand() << (32)) + qrand() ;
-    m_params << "nclients";
+    m_params << "nclientsmax";
     m_params << "4";
+    m_params << "nclientsconnected";
+    m_params << "0";
     // TODO : Ajouter des params
     connect(this, SIGNAL(readyToBegin()), this, SLOT(start()));
 }
@@ -121,15 +127,27 @@ bool Channel::addClient(quint64 client_identifier)
     }
     else
     {
-        m_client_identifier.append(client_identifier);
-        m_client_ready.append(false);
-        emit sendClient("",client_identifier); // TODO : envoyer un message
-        return (true);
+        if (m_params[1].toInt() > m_params[3].toInt())
+        {
+            m_client_identifier.append(client_identifier);
+            m_client_ready.append(false);
+            emit sendClient("",client_identifier); // TODO : envoyer un message
+            m_params[1] = QString(m_params[1].toInt() + 1);
+            return (true);
+        }
+        else
+        {
+            std::cout << "ERROR : MAX NUMBER OF CLIENT CHANNEL HAS ALREADY BEEN"
+                      << "REACHED.\n";
+            emit sendClient("0xff13",client_identifier);
+            return (false);
+        }
     }
 }
 
 /*
-** Supprimer le client uniquement s'il est présent, sinon erreur et envoyer le message eau client.
+** Supprimer le client uniquement s'il est présent, sinon erreur et envoyer
+**le message eau client.
 */
 bool Channel::delClient(quint64 client_identifier)
 {
@@ -140,6 +158,8 @@ bool Channel::delClient(quint64 client_identifier)
         id = m_client_identifier.indexOf(client_identifier);
         m_client_identifier.removeAt(id);
         m_client_ready.removeAt(id);
+        emit sendClient("",client_identifier); // TODO : envoyer un message
+        m_params[1] = QString(m_params[1].toInt() - 1);
         return (true);
     }
     else
