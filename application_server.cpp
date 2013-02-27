@@ -13,9 +13,6 @@ int Application_server::sendClient(QByteArray m, int id_client)
 {
     QByteArray paquet;
     QDataStream mess_stream(&paquet, QIODevice::WriteOnly);
-    int i;
-
-    i = 0;
 
     if (id_client >= 0)
     {
@@ -24,19 +21,23 @@ int Application_server::sendClient(QByteArray m, int id_client)
             m_sockets[id_client]->write(paquet);
             return(0);
     }
-    else if (id_client == -1)
+    else if (id_client < 0)
     {
-            while (i < m_clients.size())
-            {
-                sendClient(m,i);
-                i++;
-            }
-            return (0);
+        int i;
+
+        i = 0;
+
+        while (i < m_clients.size())
+        {
+            sendClient(m,i);
+            i++;
+        }
+        return (0);
     }
     else
     {
-            std::cout << "ERROR : UNABLE TO DO THAT !\n";
-            return(-1);
+        std::cout << "ERROR : UNABLE TO DO THAT !\n";
+        return(-1);
     }
 }
 
@@ -47,26 +48,28 @@ int Application_server::sendChannel(QByteArray m, int id_channel)
 {
     QByteArray paquet;
     QDataStream mess_stream(&paquet, QIODevice::WriteOnly);
-    int i;
-
-    i = 0;
 
     if (id_channel >= 0)
     {
-            mess_stream << (quint16)m.size();
-            mess_stream << m;
-            QList< quint64> identifier_id = m_channels[id_channel]->listClientIdentifier();
-            while (i < identifier_id.size())
-            {
-                m_sockets[ findClientId(identifier_id[i]) ]->write(paquet);
-                i++;
-            }
-            return(0);
+        int i;
+
+        i = 0;
+
+        mess_stream << (quint16)m.size();
+        mess_stream << m;
+        QList< quint64> identifier_id = m_channels[id_channel]->listClientIdentifier();
+
+        while (i < identifier_id.size())
+        {
+            m_sockets[ findClientId(identifier_id[i]) ]->write(paquet);
+            i++;
+        }
+        return (0);
     }
     else
     {
-            std::cout << "ERROR : UNABLE TO DO THAT !\n";
-            return(-1);
+        std::cout << "ERROR : UNABLE TO DO THAT !\n";
+        return (-1);
     }
 }
 
@@ -242,16 +245,16 @@ void Application_server::recv(int id_client)
 */
 void Application_server::channelSendToClient(QString m, quint64 channel_identifier)
 {
-    int i;
-
-    i = 0;
-
     if (channel_identifier == 0)
     {
         QList< quint64> identifierList;
         identifierList = m_channels[findChannelId(channel_identifier)]->listClientIdentifier();
         while (i < identifierList.size())
         {
+            int i;
+
+            i = 0;
+
             this->sendClient(m.toAscii(), findClientId(identifierList[i]));
             i++;
         }
