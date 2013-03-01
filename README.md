@@ -22,3 +22,4 @@ Contribueurs :
 - ElPakat : Dylan
 - Otatsumi : Jordan
 - iCedv : Cédric
+- Kyrio : Timothée
