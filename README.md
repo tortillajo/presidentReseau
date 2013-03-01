@@ -11,7 +11,7 @@ Infos
 Language : C++
 Langue : en
 Framework : Qt
-Plateforme : windows 8 uniquement
+Plateforme : windows 8 uniquement (et mac os x)
 
 Contribueurs :
 - Sophen : Arthur 
