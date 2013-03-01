@@ -174,7 +174,8 @@ void Application_server::newClient()
 }
 
 /*
-**
+** Enleve le client de la liste
+** TODO : notifier le channel du changement
 */
 void Application_server::delClient(int id_client)
 {
@@ -186,7 +187,7 @@ void Application_server::delClient(int id_client)
 }
 
 /*
-**
+** Créer un nouveau channel
 */
 void Application_server::newChannel()
 {
@@ -197,7 +198,8 @@ void Application_server::newChannel()
 }
 
 /*
-**
+** Enleve le channel de la liste
+** TODO : Kicker les clients du channel
 */
 void Application_server::delChannel(int id_channel)
 {

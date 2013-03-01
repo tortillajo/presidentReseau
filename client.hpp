@@ -8,29 +8,25 @@
 class Client
 {
     public:
-        //construc/destr
         Client();
         ~Client();
-        //get methods
         quint64 identifier() const;
         QString pseudo() const;
 
         quint16 dataSize() const;
         QByteArray data() const;
 
-        //set methods
         int setPseudo(QString pseudo);
         int setDataSize(quint16 size);
         int setData(QByteArray d);
 
-        //operator
         bool operator==(Client const& client);
     private:
         quint64 m_identifier;
         QString m_pseudo;
         Channel *m_channel;
-        quint16 m_dataSize; // contient la taille du message
-        QByteArray m_data; // contient le message
+        quint16 m_dataSize;
+        QByteArray m_data;
 
         QList< quint16> m_cards;
         /* attribuer un nombre a chaque carte ?
@@ -44,6 +40,5 @@ class Client
             bit 3 carreau
             bit 4 coeur ?
           */
-
 };
 #endif // CLIENT_HPP

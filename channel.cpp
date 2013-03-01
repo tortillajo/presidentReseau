@@ -94,6 +94,7 @@ int Channel::findClientId(quint64 client_identifier)
         }
         i++;
     }
+    return (-1);
 }
 
 /*

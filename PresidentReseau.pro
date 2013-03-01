@@ -28,4 +28,7 @@ HEADERS  += \
 
 #FORMS    +=
 
+OTHER_FILES += \
+    README.md
+
 

@@ -27,16 +27,14 @@ class Channel : public QObject
         void sendClient(QString,quint64);
         void readyToBegin();
         void sendToClient(QString,quint64);
-        // TODO : SLOT = channelSendToClient
 
     private:
         //[PARAMETRES DIVERS]
         QList< QString> m_params;
         /*  n est impair
-            params[n] = cle (nom du params)
-            params[n+1] = valeur de la cle
-
-          */
+        **  params[n] = cle (nom du params)
+        **  params[n+1] = valeur de la cle
+        */
 
         quint64 m_identifier;
         QString m_title;
