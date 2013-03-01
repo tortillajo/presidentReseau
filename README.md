@@ -14,7 +14,7 @@ Framework : Qt
 Plate-forme : Linux, Mac, Windows
 Encodage : UTF-8
 
-Contributeurs :
+Contributeurs 
 --------------
 - Sophen : Arthur 
 - Emeraude : Thibaut
