@@ -9,9 +9,9 @@ https://docs.google.com/document/d/1uVp3ajcUAetXLrvDU9Lg5CJ0LtFx4BeZunzq9c7OTww/
 Infos
 --------------
 Language : C++
-Langue : francais
-Framework : .NET
-Plateforme : windows 8 uniquement (et Mac OS X)
+Langue : français
+Framework : Qt
+Plate-forme : Linux forever !
 
 Contribueurs :
 - Sophen : Arthur 
