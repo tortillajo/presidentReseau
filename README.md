@@ -19,3 +19,4 @@ Contribueurs :
 - KoXtuN : Antoine
 - skilganon77 : Ludovic
 - VistaOrMac : Kévin
+- ElPakat : Dylan
