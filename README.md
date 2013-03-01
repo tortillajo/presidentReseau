@@ -12,4 +12,6 @@ Language : C++
 Langue : fr
 Framework : Qt
 
-Contribueurs : Sophen ; Emeraude
+Contribueurs :
+- Sophen : arthur 
+- Emeraude : thibaut
