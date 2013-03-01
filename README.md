@@ -11,7 +11,7 @@ Infos
 Language : C++
 Langue : en
 Framework : .NET
-Plateforme : windows 8 uniquement (et mac os x)
+Plateforme : windows 8 uniquement (et Mac OS X)
 
 Contribueurs :
 - Sophen : Arthur 
