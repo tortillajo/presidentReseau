@@ -23,3 +23,4 @@ Contribueurs :
 - Otatsumi : Jordan
 - iCedv : Cédric
 - Kyrio : Timothée
+- - loool
