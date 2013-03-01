@@ -9,9 +9,9 @@ https://docs.google.com/document/d/1uVp3ajcUAetXLrvDU9Lg5CJ0LtFx4BeZunzq9c7OTww/
 Infos
 --------------
 Language : C++
-Langue : fr
+Langue : en
 Framework : Qt
 
 Contribueurs :
-- Sophen : arthur 
-- Emeraude : thibaut
+- Sophen : Arthur 
+- Emeraude : Thibaut
