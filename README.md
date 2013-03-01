@@ -20,3 +20,4 @@ Contribueurs :
 - skilganon77 : Ludovic
 - VistaOrMac : Kévin
 - ElPakat : Dylan
+- Otatsumi : Jordan
