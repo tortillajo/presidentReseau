@@ -11,7 +11,7 @@ Infos
 Language : C++
 Langue : français
 Framework : Qt
-Plate-forme : Linux forever !
+Plate-forme : Linux, Mac, Windows
 
 Contributeurs :
 - Sophen : Arthur 
