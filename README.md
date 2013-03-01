@@ -21,3 +21,4 @@ Contribueurs :
 - VistaOrMac : Kévin
 - ElPakat : Dylan
 - Otatsumi : Jordan
+- iCedv : Cédric
