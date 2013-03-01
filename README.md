@@ -8,12 +8,14 @@ https://docs.google.com/document/d/1uVp3ajcUAetXLrvDU9Lg5CJ0LtFx4BeZunzq9c7OTww/
 
 Infos
 --------------
-Language : C++
+Langage : C++
 Langue : français
 Framework : Qt
 Plate-forme : Linux, Mac, Windows
+Encodage : UTF-8
 
 Contributeurs :
+--------------
 - Sophen : Arthur 
 - Emeraude : Thibaut
 - KoXtuN : Antoine
@@ -23,3 +25,4 @@ Contributeurs :
 - Otatsumi : Jordan
 - iCedv : Cédric
 - Kyrio : Timothée
+
