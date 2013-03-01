@@ -18,3 +18,4 @@ Contribueurs :
 - Emeraude : Thibaut
 - KoXtuN : Antoine
 - skilganon77 : Ludovic
+- VistaOrMac : Kévin
