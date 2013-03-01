@@ -303,6 +303,9 @@ void Application_server::clientLeaveChannel(quint64 client_identifier, quint64 c
 }
 
 /*
+**
+** TODO : Developper le protocole sortant (comment reépondre)
+**
 ** RECEPTION DE MESSAGES
 ** mess[0] :
 **      p = request pseudo
