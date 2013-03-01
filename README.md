@@ -1,7 +1,7 @@
 ﻿presidentReseau
 ===============
 
-Jeu de carte président en réseau
+Jeu de cartes "président" en réseau
 
 https://docs.google.com/document/d/1uVp3ajcUAetXLrvDU9Lg5CJ0LtFx4BeZunzq9c7OTww/edit
 
@@ -13,7 +13,7 @@ Langue : français
 Framework : Qt
 Plate-forme : Linux forever !
 
-Contribueurs :
+Contributeurs :
 - Sophen : Arthur 
 - Emeraude : Thibaut
 - KoXtuN : Antoine
