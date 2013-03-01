@@ -15,3 +15,4 @@ Framework : Qt
 Contribueurs :
 - Sophen : Arthur 
 - Emeraude : Thibaut
+- KoXtuN : Antoine
