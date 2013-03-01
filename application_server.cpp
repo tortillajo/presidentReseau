@@ -379,6 +379,10 @@ int Application_server::processing(QByteArray m, int id_client)
         ** poser
         ** envoyer aux autres joueurs l'information
         ** tour suivant
+        **
+        ** -> GESTION VIA Channel::start ??
+        ** -> Parametre (message recu, joueur ?)
+        ** -> Renvoie à une valeur pour savoir quoi faire ici ?
          */
     }
     else
