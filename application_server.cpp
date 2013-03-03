@@ -120,9 +120,10 @@ int Application_server::findChannelId(quint64 channel_identifier)
 }
 
 /*
-** trouver l'id du channel auqeuel apartient le client
+** trouver l'id du channel auquel apartient le client
+** si pas de channel , renvoie -1
 */
-int Application_server::findChannelAmongClient(quint64 client_identifier)
+int Application_server::findIdChannelAmongClient(quint64 client_identifier)
 {
     int i;
 
@@ -175,14 +176,22 @@ void Application_server::newClient()
 
 /*
 ** Enleve le client de la liste
-** TODO : notifier le channel du changement
+** et en informe les autres clients du channel
 */
 void Application_server::delClient(int id_client)
 {
     if (id_client < 0)
         return;
+
+    quint64 channel_identifier;
+
+    channel_identifier = m_channels[findIdChannelAmongClient(m_clients[id_client].identifier())]->identifier();
+    if (channel_identifier != -1)
+        sendChannel("scq" + QString::number(channel_identifier), channel_identifier);
+
     m_sockets.removeAt(id_client);
     m_clients.removeAt(id_client);
+
     return;
 }
 
@@ -205,7 +214,9 @@ void Application_server::delChannel(int id_channel)
 {
     if (id_channel < 0)
         return;
+
     m_channels.removeAt(id_channel);
+
     return;
 }
 
@@ -273,7 +284,7 @@ void Application_server::channelSendToClient(QString m, quint64 channel_identifi
 */
 void Application_server::clientJoinChannel(quint64 client_identifier, quint64 channel_identifier)
 {
-    if (findChannelAmongClient(client_identifier) > 0)
+    if (findIdChannelAmongClient(client_identifier) > -1)
     {
         std::cout << "ERREUR : CLIENT ALREADY HAS A CHANNEL!\n";
     }
@@ -291,7 +302,7 @@ void Application_server::clientJoinChannel(quint64 client_identifier, quint64 ch
 */
 void Application_server::clientLeaveChannel(quint64 client_identifier, quint64 channel_identifier)
 {
-    if (findChannelAmongClient(client_identifier) == -1)
+    if (findIdChannelAmongClient(client_identifier) < 0)
     {
         std::cout << "ERREUR : CLIENT HAS NO CHANNEL!\n";
     }
@@ -335,6 +346,16 @@ void Application_server::clientLeaveChannel(quint64 client_identifier, quint64 c
 **     [ cc<client>:<params>:<value> ]
 ** s : [ s<??> ]
 **
+**
+** ENVOIE DE MESSAGES
+**
+** mess[0] :
+**      s = server notification (clients, ...)
+**      c = channel notification (params)
+**      p = game notification (card, ...)
+**
+** s : [s<type><arg1:arg2:arg3:...>]
+**      scqidentifier : server client quit identifier
  */
 int Application_server::processing(QByteArray m, int id_client)
 {
@@ -342,7 +363,7 @@ int Application_server::processing(QByteArray m, int id_client)
     quint64 identifier_client;
     quint64 identifier_channel;
 
-    id_channel = findChannelAmongClient(m_clients[id_client].identifier());
+    id_channel = findIdChannelAmongClient(m_clients[id_client].identifier());
     identifier_client = m_clients[id_client].identifier();
     identifier_channel = m_channels[id_channel]->identifier();
 

@@ -30,11 +30,16 @@ class Channel : public QObject
 
     private:
         //[PARAMETRES DIVERS]
-        QList< QString> m_params;
         /*  n est impair
         **  params[n] = cle (nom du params)
         **  params[n+1] = valeur de la cle
         */
+        QList< QString> m_params;
+        QList< int> m_p_idShortedByRound; /* NOTICE : Faire une fonction capable
+                                          ** d'envoyer à la fin l'id qui vient
+                                          ** de jouer :) L'id en gaut de la
+                                          ** liste joue les autres attendent.
+                                          */
 
         quint64 m_identifier;
         QString m_title;
