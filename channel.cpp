@@ -78,9 +78,7 @@ bool Channel::clientIncluded(quint64 client_identifier) const
 int Channel::findClientId(quint64 client_identifier)
 {
     int i;
-
     i = 0;
-
     while ( i < m_client_identifier.size())
     {
         if (m_client_identifier[i] == client_identifier)
@@ -103,7 +101,6 @@ int Channel::findClientId(quint64 client_identifier)
 bool Channel::clientAreReady()
 {
     int i;
-
     i = 0;
 
     while (i < m_client_ready.size())
@@ -123,7 +120,7 @@ bool Channel::addClient(quint64 client_identifier)
     if (!clientIncluded(client_identifier))
     {
         std::cout << "ERROR : CLIENT IS ALREADY PRESENT ON THIS CHANNEL.\n";
-        emit sendClient("0xff11",client_identifier);
+        emit sendToClient("0xff11", client_identifier);
         return (false);
     }
     else
@@ -132,7 +129,8 @@ bool Channel::addClient(quint64 client_identifier)
         {
             m_client_identifier.append(client_identifier);
             m_client_ready.append(false);
-            emit sendClient("",client_identifier); // TODO : envoyer un message
+            // TODO : récupérer le pseudo !!!
+            emit sendToClient( QString("scj").toUtf8(), client_identifier);
             m_params[1] = QString(m_params[1].toInt() + 1);
             return (true);
         }
@@ -140,7 +138,7 @@ bool Channel::addClient(quint64 client_identifier)
         {
             std::cout << "ERROR : MAX NUMBER OF CLIENT CHANNEL HAS ALREADY BEEN"
                       << "REACHED.\n";
-            emit sendClient("0xff13",client_identifier);
+            emit sendToClient("0xff13", client_identifier);
             return (false);
         }
     }
@@ -155,11 +153,10 @@ bool Channel::delClient(quint64 client_identifier)
     if (clientIncluded(client_identifier))
     {
         int id;
-
         id = m_client_identifier.indexOf(client_identifier);
         m_client_identifier.removeAt(id);
         m_client_ready.removeAt(id);
-        emit sendClient("Cq",client_identifier);
+        emit sendToClient("Cq", client_identifier);
         m_params[1] = QString(m_params[1].toInt() - 1);
         return (true);
     }
@@ -177,7 +174,6 @@ bool Channel::delClient(quint64 client_identifier)
 void Channel::clientReady(quint64 client_identifier, bool value)
 {
     m_client_ready[findClientId(client_identifier)] = value;
-
     if (clientAreReady())
     {
         emit readyToBegin();
@@ -190,5 +186,4 @@ void Channel::clientReady(quint64 client_identifier, bool value)
 */
 void Channel::start()
 {
-
 }

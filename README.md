@@ -27,3 +27,9 @@ Contributeurs
 - iCedv : Cédric
 - Kyrio : Timothée
 
+Projet
+--------------
+L'objectif est de proposer un jeu de carte en reseau. (règle en annexe)
+- Compatible multi-plateforme.
+- En réseau.
+- En interface graphique (GUI).

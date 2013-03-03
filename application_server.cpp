@@ -79,7 +79,6 @@ int Application_server::sendChannel(QByteArray m, int id_channel)
 int Application_server::findClientId(quint64 client_identifier)
 {
     int i;
-
     i = 0;
 
     while ( i < m_clients.size())
@@ -102,7 +101,6 @@ int Application_server::findClientId(quint64 client_identifier)
 int Application_server::findChannelId(quint64 channel_identifier)
 {
     int i;
-
     i = 0;
 
     while ( i < m_channels.size())
@@ -123,7 +121,7 @@ int Application_server::findChannelId(quint64 channel_identifier)
 ** trouver l'id du channel auquel apartient le client
 ** si pas de channel , renvoie -1
 */
-int Application_server::findIdChannelAmongClient(quint64 client_identifier)
+int Application_server::findChannelIdAmongClient(quint64 client_identifier)
 {
     int i;
 
@@ -185,7 +183,7 @@ void Application_server::delClient(int id_client)
 
     quint64 channel_identifier;
 
-    channel_identifier = m_channels[findIdChannelAmongClient(m_clients[id_client].identifier())]->identifier();
+    channel_identifier = m_channels[findChannelIdAmongClient(m_clients[id_client].identifier())]->identifier();
     if (channel_identifier != -1)
     {
         sendChannel(QString("scq" + QString::number(channel_identifier)).toUtf8(), findChannelId(channel_identifier));
@@ -294,7 +292,7 @@ void Application_server::channelSendToClient(QString m, quint64 channel_identifi
 */
 void Application_server::clientJoinChannel(quint64 client_identifier, quint64 channel_identifier)
 {
-    if (findIdChannelAmongClient(client_identifier) > -1)
+    if (findChannelIdAmongClient(client_identifier) > -1)
     {
         std::cout << "ERREUR : CLIENT ALREADY HAS A CHANNEL!\n";
     }
@@ -312,7 +310,7 @@ void Application_server::clientJoinChannel(quint64 client_identifier, quint64 ch
 */
 void Application_server::clientLeaveChannel(quint64 client_identifier, quint64 channel_identifier)
 {
-    if (findIdChannelAmongClient(client_identifier) < 0)
+    if (findChannelIdAmongClient(client_identifier) < 0)
     {
         std::cout << "ERREUR : CLIENT HAS NO CHANNEL!\n";
     }
@@ -380,7 +378,7 @@ int Application_server::processing(QByteArray m, int id_client)
     quint64 identifier_client;
     quint64 identifier_channel;
 
-    id_channel = findIdChannelAmongClient(m_clients[id_client].identifier());
+    id_channel = findChannelIdAmongClient(m_clients[id_client].identifier());
     identifier_client = m_clients[id_client].identifier();
     identifier_channel = m_channels[id_channel]->identifier();
 

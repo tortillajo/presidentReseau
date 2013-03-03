@@ -24,7 +24,6 @@ class Channel : public QObject
         void start();
 
     signals:
-        void sendClient(QString,quint64);
         void readyToBegin();
         void sendToClient(QString,quint64);
 

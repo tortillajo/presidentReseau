@@ -10,16 +10,15 @@ class Application_server : public QObject
 {
     Q_OBJECT
 
-    //methodes publiques
     public:
         Application_server();
         int sendClient(QByteArray m, int id_client);
         int sendChannel(QByteArray m, int id_channel);
         int findClientId(quint64 client_identifier);
         int findChannelId(quint64 channel_identifier);
-        int findIdChannelAmongClient(quint64 client_identifier);
+        int findChannelIdAmongClient(quint64 client_identifier);
 
-        //slots
+    signals:
     private slots:
         void newClient();
         void delClient(int id_client);
