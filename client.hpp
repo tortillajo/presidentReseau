@@ -16,15 +16,15 @@ class Client
         quint16 dataSize() const;
         QByteArray data() const;
 
-        int setPseudo(QString pseudo);
-        int setDataSize(quint16 size);
-        int setData(QByteArray d);
+        void setPseudo(QString pseudo);
+        void setDataSize(quint16 size);
+        void setData(QByteArray d);
 
         bool operator==(Client const& client);
     private:
         quint64 m_identifier;
         QString m_pseudo;
-        Channel *m_channel;
+        quint64 m_channel_identifier;
         quint16 m_dataSize;
         QByteArray m_data;
 

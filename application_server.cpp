@@ -124,7 +124,6 @@ int Application_server::findChannelId(quint64 channel_identifier)
 int Application_server::findChannelIdAmongClient(quint64 client_identifier)
 {
     int i;
-
     i = 0;
 
     while (i < m_channels.size())

@@ -10,6 +10,7 @@
 ** m_params contient les valeurs :
 ** [1] nclientsmax
 ** [3] nclientsconnected
+** [3] title
  */
 Channel::Channel()
 {
@@ -18,6 +19,8 @@ Channel::Channel()
     m_params << "4";
     m_params << "nclientsconnected";
     m_params << "0";
+    m_params << "title";
+    m_params << "Unknow";
     // TODO : Ajouter des params
     connect(this, SIGNAL(readyToBegin()), this, SLOT(start()));
 }
@@ -39,14 +42,6 @@ quint64 Channel::identifier() const
 }
 
 /*
-** titre
-*/
-QString Channel::title() const
-{
-    return (m_title);
-}
-
-/*
 ** combien le channel possede-t'il de client ?
 */
 int Channel::howManyClient() const
@@ -60,7 +55,6 @@ int Channel::howManyClient() const
 bool Channel::clientIncluded(quint64 client_identifier) const
 {
     int i;
-
     i = 0;
 
     while (i < m_client_identifier.size())
@@ -79,6 +73,7 @@ int Channel::findClientId(quint64 client_identifier)
 {
     int i;
     i = 0;
+
     while ( i < m_client_identifier.size())
     {
         if (m_client_identifier[i] == client_identifier)
@@ -113,15 +108,14 @@ bool Channel::clientAreReady()
 }
 
 /*
-** ajouter un client s'il n'est pas déjà là. Sinon envoyer une erreur au client et ne pas ajouter.
+** ajouter un client s'il n'est pas déjà là.
 */
-bool Channel::addClient(quint64 client_identifier)
+int Channel::addClient(quint64 client_identifier)
 {
     if (!clientIncluded(client_identifier))
     {
         std::cout << "ERROR : CLIENT IS ALREADY PRESENT ON THIS CHANNEL.\n";
-        emit sendToClient("0xff11", client_identifier);
-        return (false);
+        return (0xff11);
     }
     else
     {
@@ -129,26 +123,23 @@ bool Channel::addClient(quint64 client_identifier)
         {
             m_client_identifier.append(client_identifier);
             m_client_ready.append(false);
-            // TODO : récupérer le pseudo !!!
-            emit sendToClient( QString("scj").toUtf8(), client_identifier);
             m_params[1] = QString(m_params[1].toInt() + 1);
-            return (true);
+            return (0);
         }
         else
         {
             std::cout << "ERROR : MAX NUMBER OF CLIENT CHANNEL HAS ALREADY BEEN"
                       << "REACHED.\n";
-            emit sendToClient("0xff13", client_identifier);
-            return (false);
+            return (0xff13);
         }
     }
+    return (0xffff);
 }
 
 /*
-** Supprimer le client uniquement s'il est présent, sinon erreur et envoyer
-**le message eau client.
+** Supprimer le client uniquement s'il est présent
 */
-bool Channel::delClient(quint64 client_identifier)
+int Channel::delClient(quint64 client_identifier)
 {
     if (clientIncluded(client_identifier))
     {
@@ -156,20 +147,19 @@ bool Channel::delClient(quint64 client_identifier)
         id = m_client_identifier.indexOf(client_identifier);
         m_client_identifier.removeAt(id);
         m_client_ready.removeAt(id);
-        emit sendToClient("Cq", client_identifier);
         m_params[1] = QString(m_params[1].toInt() - 1);
-        return (true);
+        return (0);
     }
     else
     {
         std::cout << "ERROR : CLIENT IS NOT PRESENT ON THIS CHANNEL.\n";
-        return (false);
+        return (0xff12);
     }
-    return (false);
+    return (0xffff);
 }
 
 /*
-** Le client devient ou non pr^et
+** Le client devient ou non pret
 */
 void Channel::clientReady(quint64 client_identifier, bool value)
 {

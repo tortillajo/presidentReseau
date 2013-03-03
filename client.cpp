@@ -37,22 +37,22 @@ QByteArray Client::data() const
     return (m_data);
 }
 
-int Client::setPseudo(QString pseudo)
+void Client::setPseudo(QString pseudo)
 {
     m_pseudo = pseudo;
-    return (true);
+    return;
 }
 
-int Client::setDataSize(quint16 size)
+void Client::setDataSize(quint16 size)
 {
     m_dataSize = size;
-    return (true);
+    return;
 }
 
-int Client::setData(QByteArray d)
+void Client::setData(QByteArray d)
 {
     m_data = d;
-    return (true);
+    return;
 }
 
 bool Client::operator==(Client const& client) // utile ?
