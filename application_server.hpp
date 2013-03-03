@@ -17,7 +17,7 @@ class Application_server : public QObject
         int sendChannel(QByteArray m, int id_channel);
         int findClientId(quint64 client_identifier);
         int findChannelId(quint64 channel_identifier);
-        int findChannelAmongClient(quint64 client_identifier);
+        int findIdChannelAmongClient(quint64 client_identifier);
 
         //slots
     private slots:

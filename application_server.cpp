@@ -187,8 +187,9 @@ void Application_server::delClient(int id_client)
 
     channel_identifier = m_channels[findIdChannelAmongClient(m_clients[id_client].identifier())]->identifier();
     if (channel_identifier != -1)
-        sendChannel("scq" + QString::number(channel_identifier), channel_identifier);
-
+    {
+        sendChannel(QString("scq" + QString::number(channel_identifier)).toUtf8(), findChannelId(channel_identifier));
+    }
     m_sockets.removeAt(id_client);
     m_clients.removeAt(id_client);
 
@@ -214,6 +215,15 @@ void Application_server::delChannel(int id_channel)
 {
     if (id_channel < 0)
         return;
+
+    QList< quint64> client_list;
+    client_list = m_channels[id_channel]->listClientIdentifier();
+    sendChannel("sCq", id_channel);
+
+    while (!client_list.isEmpty())
+    {
+        m_channels[id_channel]->delClient(client_list[0]);
+    }
 
     m_channels.removeAt(id_channel);
 
@@ -268,13 +278,13 @@ void Application_server::channelSendToClient(QString m, quint64 channel_identifi
 
         while (i < identifierList.size())
         {
-            this->sendClient(m.toAscii(), findClientId(identifierList[i]));
+            this->sendClient(m.toUtf8(), findClientId(identifierList[i]));
             i++;
         }
     }
     else
     {
-        this->sendClient(m.toAscii(), findClientId(channel_identifier));
+        this->sendClient(m.toUtf8(), findClientId(channel_identifier));
     }
     return;
 }
@@ -319,34 +329,40 @@ void Application_server::clientLeaveChannel(quint64 client_identifier, quint64 c
 **
 ** TODO : Developper le protocole sortant (comment reépondre)
 **
+** ******************
+** NORMES :
+** [ data<var1:var2> ]
+** s : server
+** c : client
+** C : channel
+** p : play
+** q : quit
+** j : join
+** g : get
+** l : list
+** x : parameter
+**
+** ******************
 ** RECEPTION DE MESSAGES
 ** mess[0] :
-**      p = request pseudo
-**      c = request channel
-**      g = <before/after> have joined channel
+**      n = request name (pseudo)
+**      C = request channel
+**      g = <before/after> joined channel
 **      p = play
 **      e = erreur
 **
-** i : [ i<pseudo> ]
-** c : [ c<id> ]
-** g : [ gb ] (liste des channels) ou
-**     [ ga<info> ] (change les params)
-**         <info> -> [ <p/g><params>:<value> ]
-**               p-> personnel
-**               g->params du chann
+** n : [ n<pseudo> ]
+** C : [ C<id> ]
+** g : [ gl ] (liste des channels) ou
+**     [ gx<info> ] (change les params)
+**         <info> -> [ <c/C><params>:<value> ]
+**               c -> personnel
+**               C -> params du chann
 **               params -> nom du params val
 ** p : [ p<cartes> ]
 ** e : [ e<num> ]
 **
-** ENVOIE DE MESSAGES
-** mess[0] :
-**      c = nouveau parametre de channel
-**      s = nouveau parametre de serveur
-** c : [ cp<params>:<value> ]
-**     [ cc<client>:<params>:<value> ]
-** s : [ s<??> ]
-**
-**
+** ******************
 ** ENVOIE DE MESSAGES
 **
 ** mess[0] :
@@ -355,7 +371,8 @@ void Application_server::clientLeaveChannel(quint64 client_identifier, quint64 c
 **      p = game notification (card, ...)
 **
 ** s : [s<type><arg1:arg2:arg3:...>]
-**      scqidentifier : server client quit identifier
+**      scq<identifier> : server client quit identifier
+**      sCd             : server Channel deconnexion
  */
 int Application_server::processing(QByteArray m, int id_client)
 {
@@ -371,7 +388,7 @@ int Application_server::processing(QByteArray m, int id_client)
     {
         return (1);
     }
-    else if (m[0] == 'i')
+    else if (m[0] == 'n')
     {
         QByteArray pseudo;
 
@@ -380,9 +397,10 @@ int Application_server::processing(QByteArray m, int id_client)
         m_clients[id_client].setPseudo(pseudo);
         sendChannel("cc:pseudo:" + pseudo, identifier_channel);
     }
-    else if (m[0] == 'c')
+    else if (m[0] == 'C')
     {
-        clientJoinChannel(identifier_client,identifier_channel);
+        identifier_channel = m.right(m.size() -1).toLongLong();
+        clientJoinChannel(identifier_client, identifier_channel);
     }
     else if (m[0] == 'g')
     {

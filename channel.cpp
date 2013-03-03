@@ -159,7 +159,7 @@ bool Channel::delClient(quint64 client_identifier)
         id = m_client_identifier.indexOf(client_identifier);
         m_client_identifier.removeAt(id);
         m_client_ready.removeAt(id);
-        emit sendClient("",client_identifier); // TODO : envoyer un message
+        emit sendClient("Cq",client_identifier);
         m_params[1] = QString(m_params[1].toInt() - 1);
         return (true);
     }
