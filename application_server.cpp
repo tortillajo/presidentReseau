@@ -24,7 +24,6 @@ int Application_server::sendClient(QByteArray m, int id_client)
     else if (id_client < 0)
     {
         int i;
-
         i = 0;
 
         while (i < m_clients.size())
@@ -140,7 +139,7 @@ int Application_server::findChannelIdAmongClient(quint64 client_identifier)
 /*
 ** ajouter un client au serveur
 */
-void Application_server::newClient()
+int Application_server::newClient()
 {
 
     QTcpSocket* socket;
@@ -166,19 +165,20 @@ void Application_server::newClient()
     else
     {
         std::cout << "ERREUR : DONNEES NON-SYNCHRONISEE. DISFONCTIONNEMENT GENERAL!" << std::endl;
-        return;
+        return (0xfff1);
     }
-    return;
+
+    return (0);
 }
 
 /*
 ** Enleve le client de la liste
 ** et en informe les autres clients du channel
 */
-void Application_server::delClient(int id_client)
+int Application_server::delClient(int id_client)
 {
     if (id_client < 0)
-        return;
+        return(-1);
 
     quint64 channel_identifier;
 
@@ -190,28 +190,27 @@ void Application_server::delClient(int id_client)
     m_sockets.removeAt(id_client);
     m_clients.removeAt(id_client);
 
-    return;
+    return (0);
 }
 
 /*
 ** Créer un nouveau channel
 */
-void Application_server::newChannel()
+int Application_server::newChannel()
 {
     Channel *channel;
     m_channels.append(channel);
-    connect(m_channels.last(), SIGNAL(sendClient(QString,quint64)), this, SLOT(channelSendToClient(QString,quint64)));
-    return;
+    return (0);
 }
 
 /*
 ** Enleve le channel de la liste
 ** TODO : Kicker les clients du channel
 */
-void Application_server::delChannel(int id_channel)
+int Application_server::delChannel(int id_channel)
 {
     if (id_channel < 0)
-        return;
+        return(-1);
 
     QList< quint64> client_list;
     client_list = m_channels[id_channel]->listClientIdentifier();
@@ -224,7 +223,7 @@ void Application_server::delChannel(int id_channel)
 
     m_channels.removeAt(id_channel);
 
-    return;
+    return (0);
 }
 
 /*
@@ -302,6 +301,7 @@ void Application_server::clientJoinChannel(quint64 client_identifier, quint64 ch
         id_channel = findChannelId(channel_identifier);
         m_channels[id_channel]->addClient(client_identifier);
     }
+    return;
 }
 
 /*
@@ -320,6 +320,7 @@ void Application_server::clientLeaveChannel(quint64 client_identifier, quint64 c
         id_channel = findChannelId(channel_identifier);
         m_channels[id_channel]->delClient(client_identifier);
     }
+    return;
 }
 
 /*
@@ -398,6 +399,7 @@ int Application_server::processing(QByteArray m, int id_client)
     {
         identifier_channel = m.right(m.size() -1).toLongLong();
         clientJoinChannel(identifier_client, identifier_channel);
+        // TODO : Envoier le message de succes ou pas.
     }
     else if (m[0] == 'g')
     {

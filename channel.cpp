@@ -30,7 +30,13 @@ Channel::Channel()
 */
 QList< quint64> Channel::listClientIdentifier()
 {
-    return (m_client_identifier);
+    QList< quint64> list_client_identifier;
+
+    for (int i = 0; i < m_clients.size(); i++)
+    {
+        list_client_identifier.append(m_clients[i].identifier);
+    }
+    return (list_client_identifier);
 }
 
 /*
@@ -46,7 +52,7 @@ quint64 Channel::identifier() const
 */
 int Channel::howManyClient() const
 {
-    return (m_client_identifier.size());
+    return (m_clients.size());
 }
 
 /*
@@ -57,9 +63,9 @@ bool Channel::clientIncluded(quint64 client_identifier) const
     int i;
     i = 0;
 
-    while (i < m_client_identifier.size())
+    while (i < m_clients.size())
     {
-        if (client_identifier == m_client_identifier[i] )
+        if (client_identifier == m_clients[i].identifier )
             return (true);
         i++;
     }
@@ -74,9 +80,9 @@ int Channel::findClientId(quint64 client_identifier)
     int i;
     i = 0;
 
-    while ( i < m_client_identifier.size())
+    while ( i < m_clients.size())
     {
-        if (m_client_identifier[i] == client_identifier)
+        if (m_clients[i].identifier == client_identifier)
         {
             return (i);
         }
@@ -98,9 +104,9 @@ bool Channel::clientAreReady()
     int i;
     i = 0;
 
-    while (i < m_client_ready.size())
+    while (i < m_clients.size())
     {
-        if (m_client_ready[i] == false)
+        if (m_clients[i].ready == false)
             return (false);
         i++;
     }
@@ -121,8 +127,10 @@ int Channel::addClient(quint64 client_identifier)
     {
         if (m_params[1].toInt() > m_params[3].toInt())
         {
-            m_client_identifier.append(client_identifier);
-            m_client_ready.append(false);
+            s_client client;
+            client.identifier = client_identifier;
+            client.ready = false;
+            m_clients.append(client);
             m_params[1] = QString(m_params[1].toInt() + 1);
             return (0);
         }
@@ -144,9 +152,8 @@ int Channel::delClient(quint64 client_identifier)
     if (clientIncluded(client_identifier))
     {
         int id;
-        id = m_client_identifier.indexOf(client_identifier);
-        m_client_identifier.removeAt(id);
-        m_client_ready.removeAt(id);
+        id = findClientId(client_identifier);
+        m_clients.removeAt(id);
         m_params[1] = QString(m_params[1].toInt() - 1);
         return (0);
     }
@@ -163,7 +170,7 @@ int Channel::delClient(quint64 client_identifier)
 */
 void Channel::clientReady(quint64 client_identifier, bool value)
 {
-    m_client_ready[findClientId(client_identifier)] = value;
+    m_clients[findClientId(client_identifier)].ready = value;
     if (clientAreReady())
     {
         emit readyToBegin();

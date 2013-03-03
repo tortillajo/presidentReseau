@@ -3,6 +3,12 @@
 #include <QtCore/QCoreApplication>
 #include <iostream>
 
+struct s_client
+{
+    quint64 identifier;
+    bool ready;
+};
+
 class Channel : public QObject
 {
     Q_OBJECT
@@ -39,8 +45,7 @@ class Channel : public QObject
                                           */
 
         quint64 m_identifier;
-        QList< quint64> m_client_identifier;
-        QList< bool> m_client_ready;
+        QList< s_client> m_clients;
         bool m_started; // -1 si termine, 0 si pas encore lance, 1 si en cours
 
 };
