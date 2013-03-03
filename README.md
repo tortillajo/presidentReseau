@@ -5,7 +5,7 @@ Jeu de cartes "président" en réseau
 
 https://docs.google.com/document/d/1uVp3ajcUAetXLrvDU9Lg5CJ0LtFx4BeZunzq9c7OTww/edit
 
-Informations et discutions sur le groupe facebook : 143389435815557
+Informations et discussions sur le groupe facebook : 143389435815557
 
 Infos
 --------------
@@ -29,7 +29,7 @@ Contributeurs
 
 Projet
 --------------
-L'objectif est de proposer un jeu de carte en reseau. (règle en annexe)
-- Compatible multi-plateforme.
-- En réseau.
-- En interface graphique (GUI).
+L'objectif est de proposer un jeu de carte multijoueur (règle en annexe) :
+- Compatible multi-plateforme
+- En réseau
+- En interface graphique (GUI)
