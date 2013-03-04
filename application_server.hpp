@@ -30,8 +30,8 @@ class Application_server : public QObject
         // TODO lors de la creation de chann, lier le signal a ce slot
 
     private:
-        void clientJoinChannel(quint64 client_identifier, quint64 channel_identifier);
-        void clientLeaveChannel(quint64 client_identifier, quint64 channel_identifier);
+        int clientJoinChannel(quint64 client_identifier, quint64 channel_identifier);
+        int clientLeaveChannel(quint64 client_identifier, quint64 channel_identifier);
         int processing(QByteArray m, int id_client); // on traite les messages recus.
 
         //methodes privees

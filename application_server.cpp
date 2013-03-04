@@ -287,11 +287,12 @@ void Application_server::channelSendToClient(QString m, quint64 channel_identifi
 /*
 ** le client tente de joindre le channel. Tester et executer
 */
-void Application_server::clientJoinChannel(quint64 client_identifier, quint64 channel_identifier)
+int Application_server::clientJoinChannel(quint64 client_identifier, quint64 channel_identifier)
 {
     if (findChannelIdAmongClient(client_identifier) > -1)
     {
         std::cout << "ERREUR : CLIENT ALREADY HAS A CHANNEL!\n";
+        return (0xfff1);
     }
     else
     {
@@ -299,18 +300,20 @@ void Application_server::clientJoinChannel(quint64 client_identifier, quint64 ch
 
         id_channel = findChannelId(channel_identifier);
         m_channels[id_channel]->addClient(client_identifier);
+        return (0);
     }
-    return;
+    return (0xffff);
 }
 
 /*
 ** le client tente de quitter le channel. Tester et executer
 */
-void Application_server::clientLeaveChannel(quint64 client_identifier, quint64 channel_identifier)
+int Application_server::clientLeaveChannel(quint64 client_identifier, quint64 channel_identifier)
 {
     if (findChannelIdAmongClient(client_identifier) < 0)
     {
         std::cout << "ERREUR : CLIENT HAS NO CHANNEL!\n";
+        return (0xfff2);
     }
     else
     {
@@ -318,8 +321,9 @@ void Application_server::clientLeaveChannel(quint64 client_identifier, quint64 c
 
         id_channel = findChannelId(channel_identifier);
         m_channels[id_channel]->delClient(client_identifier);
+        return (0);
     }
-    return;
+    return (0xffff);
 }
 
 /*
@@ -400,7 +404,7 @@ int Application_server::processing(QByteArray m, int id_client)
     {
         identifier_channel = m.right(m.size() -1).toLongLong();
         err = clientJoinChannel(identifier_client, identifier_channel);
-        // TODO : Envoier le message de succes ou pas.
+        sendClient(QString::number(err).toUtf8(), id_client);
     }
     else if (m[0] == 'g')
     {
