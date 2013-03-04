@@ -127,7 +127,7 @@ int Channel::addClient(quint64 client_identifier)
     {
         if (m_params[1].toInt() > m_params[3].toInt())
         {
-            s_client client;
+            s_channel_client client;
             client.identifier = client_identifier;
             client.ready = false;
             m_clients.append(client);

@@ -6,6 +6,13 @@
 #include "channel.hpp"
 #include "client.hpp"
 
+typedef struct s_application_client s_application_client;
+struct s_application_client
+{
+    Client client;
+    QTcpSocket *socket;
+};
+
 class Application_server : public QObject
 {
     Q_OBJECT
@@ -38,8 +45,7 @@ class Application_server : public QObject
     private:
         QTcpServer* m_server;
         QList< Channel*> m_channels;
-        QList< Client> m_clients;
-        QList< QTcpSocket*> m_sockets;
+        QList< s_application_client> m_clients;
 };
 
 #endif // APPLICATION_HPP
