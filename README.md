@@ -11,10 +11,15 @@ Infos
 --------------
 
 Langage : C++
+
 Langue : français
+
 Framework : Qt
+
 Plate-forme : Linux, Mac, Windows
+
 Encodage : UTF-8
+
 
 Contributeurs
 --------------
@@ -47,8 +52,12 @@ Les messages d'erreur sont simplement des notifications (pas forcement probléma
 -tiques).
 
 0xff11 : [NOTIC] client déjà present dans le channel
+
 0xff12 : [NOTIC] client non present dans le channel
+
 0xff13 : [NOTIC] max client atteint dans le channel
+
 0xfff1 : [CRITI] erreur de synchronisation
+
 0xffff : [GRAVE] unknow error
 
