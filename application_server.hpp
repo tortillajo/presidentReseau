@@ -30,18 +30,6 @@ class Application_server : public QObject
         // TODO lors de la creation de chann, lier le signal a ce slot
 
     private:
-        /*
-        ** erreurs (note : le client n'est pas forcement en faute.
-        **                 les erreurs sont informatives et peuvent ne
-        **                 pas poser de problèmes. )
-        **
-        ** 0xff11 : [NOTIC] client déjà present dans le channel
-        ** 0xff12 : [NOTIC] client non present dans le channel
-        ** 0xff13 : [NOTIC] max client atteint dans le channel
-        ** 0xfff1 : [CRITI] erreur de synchronisation
-        ** 0xffff : [GRAVE] unknow error
-        **
-        */
         void clientJoinChannel(quint64 client_identifier, quint64 channel_identifier);
         void clientLeaveChannel(quint64 client_identifier, quint64 channel_identifier);
         int processing(QByteArray m, int id_client); // on traite les messages recus.

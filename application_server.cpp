@@ -19,7 +19,7 @@ int Application_server::sendClient(QByteArray m, int id_client)
             mess_stream << (quint16)m.size();
             mess_stream << m;
             m_sockets[id_client]->write(paquet);
-            return(0);
+            return (0);
     }
     else if (id_client < 0)
     {
@@ -36,7 +36,7 @@ int Application_server::sendClient(QByteArray m, int id_client)
     else
     {
         std::cout << "ERROR : UNABLE TO DO THAT !\n";
-        return(-1);
+        return (-1);
     }
 }
 
@@ -51,7 +51,6 @@ int Application_server::sendChannel(QByteArray m, int id_channel)
     if (id_channel >= 0)
     {
         int i;
-
         i = 0;
 
         mess_stream << (quint16)m.size();
@@ -178,7 +177,7 @@ int Application_server::newClient()
 int Application_server::delClient(int id_client)
 {
     if (id_client < 0)
-        return(-1);
+        return (-1);
 
     quint64 channel_identifier;
 
@@ -210,7 +209,7 @@ int Application_server::newChannel()
 int Application_server::delChannel(int id_channel)
 {
     if (id_channel < 0)
-        return(-1);
+        return (-1);
 
     QList< quint64> client_list;
     client_list = m_channels[id_channel]->listClientIdentifier();
@@ -339,6 +338,7 @@ void Application_server::clientLeaveChannel(quint64 client_identifier, quint64 c
 ** g : get
 ** l : list
 ** x : parameter
+** e : error (notice ! -> table README.md)
 **
 ** ******************
 ** RECEPTION DE MESSAGES
@@ -375,6 +375,7 @@ void Application_server::clientLeaveChannel(quint64 client_identifier, quint64 c
 int Application_server::processing(QByteArray m, int id_client)
 {
     int id_channel;
+    int err;
     quint64 identifier_client;
     quint64 identifier_channel;
 
@@ -398,7 +399,7 @@ int Application_server::processing(QByteArray m, int id_client)
     else if (m[0] == 'C')
     {
         identifier_channel = m.right(m.size() -1).toLongLong();
-        clientJoinChannel(identifier_client, identifier_channel);
+        err = clientJoinChannel(identifier_client, identifier_channel);
         // TODO : Envoier le message de succes ou pas.
     }
     else if (m[0] == 'g')

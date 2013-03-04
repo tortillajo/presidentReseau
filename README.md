@@ -32,3 +32,18 @@ L'objectif est de proposer un jeu de carte multijoueur (règle en annexe) :
 - Compatible multi-plateforme
 - En réseau
 - En interface graphique (GUI)
+
+Details du programme
+==============
+
+Messages d'erreur
+--------------
+
+Les messages d'erreur sont simplement des notifications (pas forcement probléma-
+-tiques).
+
+0xff11 : [NOTIC] client déjà present dans le channel
+0xff12 : [NOTIC] client non present dans le channel
+0xff13 : [NOTIC] max client atteint dans le channel
+0xfff1 : [CRITI] erreur de synchronisation
+0xffff : [GRAVE] unknow error
