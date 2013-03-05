@@ -1,11 +1,9 @@
 #include "application_server.hpp"
 
-// CONSTRUCTEURS / DESTRUCT
 Application_server::Application_server()
 {
 }
 
-// PUBLIC
 /*
 ** Envoyer m au client [id]
 */
@@ -143,10 +141,12 @@ int Application_server::newClient()
 
     QTcpSocket* socket;
     s_application_client client;
+    quint64 client_identifier;
     int id;
 
     m_clients.append(client);
-    id = m_clients.indexOf(client); // TODO : comme un .first() ?
+    client_identifier = client.client.identifier();
+    id = findClientId(client_identifier);
     m_clients[id].socket = m_server->nextPendingConnection();
     std::cout << "New connexion" << std::endl;
 
