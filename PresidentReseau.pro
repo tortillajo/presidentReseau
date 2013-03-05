@@ -30,5 +30,3 @@ HEADERS  += \
 
 OTHER_FILES += \
     README.md
-
-

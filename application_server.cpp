@@ -361,16 +361,16 @@ int Application_server::clientLeaveChannel(quint64 client_identifier, quint64 ch
 **      scq<identifier> : server client quit identifier
 **      sCd             : server Channel deconnexion
  */
-int Application_server::processing(QByteArray m, int id_client)
+int Application_server::processing(QByteArray m, int client_id)
 {
-    int id_channel;
+    int channel_id;
     int err;
-    quint64 identifier_client;
-    quint64 identifier_channel;
+    quint64 client_identifier;
+    quint64 channel_identifier;
 
-    id_channel = findChannelIdAmongClient(m_clients[id_client].client.identifier());
-    identifier_client = m_clients[id_client].client.identifier();
-    identifier_channel = m_channels[id_channel]->identifier();
+    channel_id = findChannelIdAmongClient(m_clients[client_id].client.identifier());
+    client_identifier = m_clients[client_id].client.identifier();
+    channel_identifier = m_channels[channel_id]->identifier();
 
     if (m.size() < 2)
     {
@@ -382,7 +382,7 @@ int Application_server::processing(QByteArray m, int id_client)
         pseudo = m.right(m.size() - 1);
 
         m_clients[id_client].client.setPseudo(pseudo);
-        err = sendChannel("cc:pseudo:" + pseudo, identifier_channel);
+        err = sendChannel("cc:pseudo:" + pseudo, channel_identifier);
         if (!err)
         {
             sendClient("e", id_client); // TODO...
@@ -390,7 +390,7 @@ int Application_server::processing(QByteArray m, int id_client)
     }
     else if (m[0] == 'C')
     {
-        identifier_channel = m.right(m.size() -1).toLongLong();
+        channel_identifier = m.right(m.size() -1).toLongLong();
         err = clientJoinChannel(identifier_client, identifier_channel);
         sendClient(QString("e" + QString::number(err)).toUtf8(), id_client);
         // TODO...
@@ -408,19 +408,7 @@ int Application_server::processing(QByteArray m, int id_client)
     }
     else if (m[0] == 'p')
     {
-        /*
-        ** TODO :
-        ** gestion des cartes.
-        ** verifier si la carte est dans la main du joueur
-        ** verifier s'il a le droit le la poser (règles + tour )
-        ** poser
-        ** envoyer aux autres joueurs l'information
-        ** tour suivant
-        **
-        ** -> GESTION VIA Channel::start ??
-        ** -> Parametre (message recu, joueur ?)
-        ** -> Renvoie à une valeur pour savoir quoi faire ici ?
-         */
+        m_channels[channel_id]->play(m.right(m.size() - 1), client_identifier);
     }
     else
     {

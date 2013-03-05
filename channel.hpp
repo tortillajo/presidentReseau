@@ -33,6 +33,9 @@ class Channel : public QObject
         void readyToBegin();
 
     private:
+        int play(QString card, quint64 client_identifier);
+
+    private:
         //[PARAMETRES DIVERS]
         /*  n est impair
         **  params[n] = cle (nom du params)

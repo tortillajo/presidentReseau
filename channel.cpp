@@ -22,7 +22,7 @@ Channel::Channel()
     m_params << "title";
     m_params << "Unknow";
     // TODO : Ajouter des params
-    connect(this, SIGNAL(readyToBegin()), this, SLOT(start()));
+    connect(this, SIGNAL(readyToBegin()), this, SLOT(play()));
 }
 
 /*
@@ -179,8 +179,15 @@ void Channel::clientReady(quint64 client_identifier, bool value)
 }
 
 /*
-** lancement de la partie. Gestion des coups etc..
+** lancement de la partie
 */
 void Channel::start()
 {
+}
+/*
+** Gestion de la partie
+*/
+int Channel::play(QString card, quint64 client_identifier)
+{
+    return (0);
 }
