@@ -19,11 +19,15 @@ class Channel : public QObject
         QList< quint64> listClientIdentifier();
         quint64 identifier() const;
         int howManyClient() const;
+
         bool clientIncluded(quint64 client_identifier) const;
+        bool clientsAreReady();
         int findClientId(quint64 client_identifier);
-        bool clientAreReady();
+
         int addClient(quint64 client_identifier);
         int delClient(quint64 client_identifier);
+
+        int play(QString card, quint64 client_identifier);
 
     private slots:
         void clientReady(quint64 client_identifier, bool value);
@@ -31,9 +35,6 @@ class Channel : public QObject
 
     signals:
         void readyToBegin();
-
-    private:
-        int play(QString card, quint64 client_identifier);
 
     private:
         //[PARAMETRES DIVERS]

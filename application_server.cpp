@@ -7,19 +7,19 @@ Application_server::Application_server()
 /*
 ** Envoyer m au client [id]
 */
-int Application_server::sendClient(QByteArray m, int id_client)
+int Application_server::sendClient(QByteArray m, int client_id)
 {
     QByteArray paquet;
     QDataStream mess_stream(&paquet, QIODevice::WriteOnly);
 
-    if (id_client >= 0)
+    if (client_id >= 0)
     {
             mess_stream << (quint16)m.size();
             mess_stream << m;
-            m_clients[id_client].socket->write(paquet);
+            m_clients[client_id].socket->write(paquet);
             return (0);
     }
-    else if (id_client < 0)
+    else if (client_id < 0)
     {
         int i;
         i = 0;
@@ -41,19 +41,19 @@ int Application_server::sendClient(QByteArray m, int id_client)
 /*
 ** envoyer un message m a chaque client inclue dans channellist[id]
 */
-int Application_server::sendChannel(QByteArray m, int id_channel)
+int Application_server::sendChannel(QByteArray m, int channel_id)
 {
     QByteArray paquet;
     QDataStream mess_stream(&paquet, QIODevice::WriteOnly);
 
-    if (id_channel >= 0)
+    if (channel_id >= 0)
     {
         int i;
         i = 0;
 
         mess_stream << (quint16)m.size();
         mess_stream << m;
-        QList< quint64> identifier_id = m_channels[id_channel]->listClientIdentifier();
+        QList< quint64> identifier_id = m_channels[channel_id]->listClientIdentifier();
 
         while (i < identifier_id.size())
         {
@@ -138,8 +138,6 @@ int Application_server::findChannelIdAmongClient(quint64 client_identifier)
 */
 int Application_server::newClient()
 {
-
-    QTcpSocket* socket;
     s_application_client client;
     quint64 client_identifier;
     int id;
@@ -148,9 +146,10 @@ int Application_server::newClient()
     client_identifier = client.client.identifier();
     id = findClientId(client_identifier);
     m_clients[id].socket = m_server->nextPendingConnection();
-    std::cout << "New connexion" << std::endl;
 
-    std::cout << "AJOUT DE CLIENT DANS LES DONNES DU SERVEUR. SYNCHRONISATION OK !" << std::endl;
+    std::cout << "New connexion" << std::endl;
+    std::cout << "ADDING THE CLIENT. SYNCHRONISATION'S COMPLETE' !" << std::endl;
+
     connect(m_clients[id].socket, SIGNAL(disconnected()), this, SLOT(delClient(id)));
     connect(m_clients[id].socket, SIGNAL(readyRead()), this, SLOT(recv(id)));
     return (0);
@@ -160,19 +159,24 @@ int Application_server::newClient()
 ** Enleve le client de la liste
 ** et en informe les autres clients du channel
 */
-int Application_server::delClient(int id_client)
+int Application_server::delClient(int client_id)
 {
-    if (id_client < 0)
+    if (client_id < 0)
         return (-1);
 
+    int channel_id;
     quint64 channel_identifier;
+    client_id = m_clients[client_id].client.identifier();
+    channel_id = findChannelIdAmongClient(client_id);
+    channel_identifier = m_channels[channel_id]->identifier();
 
-    channel_identifier = m_channels[findChannelIdAmongClient(m_clients[id_client].client.identifier())]->identifier();
     if (channel_identifier != -1)
     {
-        sendChannel(QString("scq" + QString::number(channel_identifier)).toUtf8(), findChannelId(channel_identifier));
+        QByteArray message;
+        message = QString("scq" + QString::number(channel_identifier)).toUtf8();
+        sendChannel(message, findChannelId(channel_identifier));
     }
-    m_clients.removeAt(id_client);
+    m_clients.removeAt(client_id);
 
     return (0);
 }
@@ -191,21 +195,21 @@ int Application_server::newChannel()
 ** Enleve le channel de la liste
 ** TODO : Kicker les clients du channel
 */
-int Application_server::delChannel(int id_channel)
+int Application_server::delChannel(int channel_id)
 {
-    if (id_channel < 0)
+    if (channel_id < 0)
         return (-1);
 
     QList< quint64> client_list;
-    client_list = m_channels[id_channel]->listClientIdentifier();
-    sendChannel("sCq", id_channel);
+    client_list = m_channels[channel_id]->listClientIdentifier();
+    sendChannel("sCq", channel_id);
 
     while (!client_list.isEmpty())
     {
-        m_channels[id_channel]->delClient(client_list[0]);
+        m_channels[channel_id]->delClient(client_list[0]);
     }
 
-    m_channels.removeAt(id_channel);
+    m_channels.removeAt(channel_id);
 
     return (0);
 }
@@ -215,30 +219,30 @@ int Application_server::delChannel(int id_channel)
 ** donc on charge les 16 bits dans la taille du message
 ** on attend d'avoir tout recu
 */
-void Application_server::recv(int id_client)
+void Application_server::recv(int client_id)
 {
     QByteArray mess;
-    QDataStream mess_r(m_clients[id_client].socket);
+    QDataStream mess_r(m_clients[client_id].socket);
 
-    if (m_clients[id_client].client.dataSize() == 0)
+    if (m_clients[client_id].client.dataSize() == 0)
     {
         quint16 size;
 
-        if (m_clients[id_client].socket->bytesAvailable() < sizeof(quint16))
+        if (m_clients[client_id].socket->bytesAvailable() < sizeof(quint16))
             return; // attente des 16 bits
-        size = m_clients[id_client].client.dataSize();
+        size = m_clients[client_id].client.dataSize();
         mess_r >> size; // copie des 16 bits (taille)
-        m_clients[id_client].client.setDataSize(size);
+        m_clients[client_id].client.setDataSize(size);
     }
 
-    if (m_clients[id_client].socket->bytesAvailable() < m_clients[id_client].client.dataSize())
+    if (m_clients[client_id].socket->bytesAvailable() < m_clients[client_id].client.dataSize())
         return;
 
-    mess = m_clients[id_client].client.data();
+    mess = m_clients[client_id].client.data();
     mess_r >> mess;
-    m_clients[id_client].client.setData(mess);
-    m_clients[id_client].client.setDataSize(0);
-    processing(m_clients[id_client].client.data(), id_client);
+    m_clients[client_id].client.setData(mess);
+    m_clients[client_id].client.setDataSize(0);
+    processing(m_clients[client_id].client.data(), client_id);
     return;
 }
 
@@ -251,9 +255,11 @@ void Application_server::channelSendToClient(QString m, quint64 channel_identifi
     if (channel_identifier == 0)
     {
         QList< quint64> identifierList;
+        int channel_id;
         int i;
 
-        identifierList = m_channels[findChannelId(channel_identifier)]->listClientIdentifier();
+        channel_id = findChannelId(channel_identifier);
+        identifierList = m_channels[channel_id]->listClientIdentifier();
         i = 0;
 
         while (i < identifierList.size())
@@ -363,57 +369,65 @@ int Application_server::clientLeaveChannel(quint64 client_identifier, quint64 ch
  */
 int Application_server::processing(QByteArray m, int client_id)
 {
-    int channel_id;
     int err;
+    int channel_id;
     quint64 client_identifier;
     quint64 channel_identifier;
+    QByteArray message_send;
 
-    channel_id = findChannelIdAmongClient(m_clients[client_id].client.identifier());
     client_identifier = m_clients[client_id].client.identifier();
+    channel_id = findChannelIdAmongClient(client_identifier);
     channel_identifier = m_channels[channel_id]->identifier();
 
     if (m.size() < 2)
     {
         return (1);
     }
-    else if (m[0] == 'n')
-    {
-        QByteArray pseudo;
-        pseudo = m.right(m.size() - 1);
-
-        m_clients[id_client].client.setPseudo(pseudo);
-        err = sendChannel("cc:pseudo:" + pseudo, channel_identifier);
-        if (!err)
-        {
-            sendClient("e", id_client); // TODO...
-        }
-    }
-    else if (m[0] == 'C')
-    {
-        channel_identifier = m.right(m.size() -1).toLongLong();
-        err = clientJoinChannel(identifier_client, identifier_channel);
-        sendClient(QString("e" + QString::number(err)).toUtf8(), id_client);
-        // TODO...
-    }
-    else if (m[0] == 'g')
-    {
-        if (m[1] == 'b')
-        {
-            // TODO : envoyer la liste des chann
-        }
-        else if (m[1] == 'a')
-        {
-            // TODO : changer des params
-        }
-    }
-    else if (m[0] == 'p')
-    {
-        m_channels[channel_id]->play(m.right(m.size() - 1), client_identifier);
-    }
     else
     {
-        std::cout << "Erreur dans la lecture du flux de donnees.\n";
-    }
+        QByteArray message_recv;
+        message_recv = m.right(m.size() - 1);
 
+        if (m[0] == 'n')
+        {
+            QByteArray pseudo;
+            pseudo = message_recv;
+            message_send = QString("cc:pseudo:" + pseudo).toUtf8();
+
+            m_clients[client_id].client.setPseudo(pseudo);
+            err = sendChannel(message_send, channel_identifier);
+            if (!err)
+            {
+                sendClient("e", client_id); // TODO...
+            }
+        }
+        else if (m[0] == 'C')
+        {
+            channel_identifier = message_recv.toLongLong();
+            err = clientJoinChannel(client_identifier, channel_identifier);
+            message_send = QString("e" + QString::number(err)).toUtf8();
+            sendClient(message_send, client_id);
+            // TODO...
+        }
+        else if (m[0] == 'g')
+        {
+            if (m[1] == 'b')
+            {
+                // TODO : envoyer la liste des chann
+            }
+            else if (m[1] == 'a')
+            {
+                // TODO : changer des params
+            }
+        }
+        else if (m[0] == 'p')
+        {
+            m_channels[channel_id]->play(message_recv, client_identifier);
+        }
+        else
+        {
+            std::cout << "Erreur dans la lecture du flux de donnees.\n";
+        }
+    }
     return (0);
 }

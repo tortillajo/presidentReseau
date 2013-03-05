@@ -99,7 +99,7 @@ int Channel::findClientId(quint64 client_identifier)
 /*
 ** dit si tous les clients sont prets ou non.
 */
-bool Channel::clientAreReady()
+bool Channel::clientsAreReady()
 {
     int i;
     i = 0;
@@ -171,7 +171,7 @@ int Channel::delClient(quint64 client_identifier)
 void Channel::clientReady(quint64 client_identifier, bool value)
 {
     m_clients[findClientId(client_identifier)].ready = value;
-    if (clientAreReady())
+    if (clientsAreReady())
     {
         emit readyToBegin();
     }
