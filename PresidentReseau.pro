@@ -8,7 +8,7 @@ QT       += core
 QT       -= gui
 QT       += network
 
-CONFIG   += console
+CONFIG   += console debug
 CONFIG   -= app_bundle
 
 TARGET = PresidentReseau

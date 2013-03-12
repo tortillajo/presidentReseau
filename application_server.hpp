@@ -2,7 +2,7 @@
 #define APPLICATION_HPP
 #include <QtCore/QCoreApplication>
 #include <QtNetwork>
-#include <iostream>
+#include <QDebug>
 #include "channel.hpp"
 #include "client.hpp"
 

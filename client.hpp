@@ -2,7 +2,7 @@
 #define CLIENT_HPP
 #include <QtCore/QCoreApplication>
 #include <QTcpSocket>
-#include <iostream>
+#include <QDebug>
 #include "channel.hpp"
 
 class Client

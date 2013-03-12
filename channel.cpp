@@ -120,7 +120,7 @@ int Channel::addClient(quint64 client_identifier)
 {
     if (!clientIncluded(client_identifier))
     {
-        std::cout << "ERROR : CLIENT IS ALREADY PRESENT ON THIS CHANNEL.\n";
+        qDebug()<< "ERROR : CLIENT IS ALREADY PRESENT ON THIS CHANNEL.";
         return (0xff11);
     }
     else
@@ -136,8 +136,8 @@ int Channel::addClient(quint64 client_identifier)
         }
         else
         {
-            std::cout << "ERROR : MAX NUMBER OF CLIENT CHANNEL HAS ALREADY BEEN"
-                      << "REACHED.\n";
+            qDebug()<< "ERROR : MAX NUMBER OF CLIENT CHANNEL HAS ALREADY BEEN"
+                      << "REACHED.";
             return (0xff13);
         }
     }
@@ -159,7 +159,7 @@ int Channel::delClient(quint64 client_identifier)
     }
     else
     {
-        std::cout << "ERROR : CLIENT IS NOT PRESENT ON THIS CHANNEL.\n";
+        qDebug()<< "ERROR : CLIENT IS NOT PRESENT ON THIS CHANNEL.";
         return (0xff12);
     }
     return (0xffff);

@@ -2,6 +2,7 @@
 
 Application_server::Application_server()
 {
+    m_server->listen(QHostAddress::Any,9033);
 }
 
 /*
@@ -33,7 +34,7 @@ int Application_server::sendClient(QByteArray m, int client_id)
     }
     else
     {
-        std::cout << "ERROR : UNABLE TO DO THAT !\n";
+        qDebug()<< "ERROR : UNABLE TO DO THAT !";
         return (-1);
     }
 }
@@ -64,7 +65,7 @@ int Application_server::sendChannel(QByteArray m, int channel_id)
     }
     else
     {
-        std::cout << "ERROR : UNABLE TO DO THAT !\n";
+        qDebug()<< "ERROR : UNABLE TO DO THAT !";
         return (-1);
     }
 }
@@ -142,13 +143,13 @@ int Application_server::newClient()
     quint64 client_identifier;
     int id;
 
+    qDebug()<< "New connexion";
     m_clients.append(client);
     client_identifier = client.client.identifier();
     id = findClientId(client_identifier);
     m_clients[id].socket = m_server->nextPendingConnection();
 
-    std::cout << "New connexion" << std::endl;
-    std::cout << "ADDING THE CLIENT. SYNCHRONISATION'S COMPLETE' !" << std::endl;
+    qDebug()<< "ADDING THE CLIENT. SYNCHRONISATION'S COMPLETE' !";
 
     connect(m_clients[id].socket, SIGNAL(disconnected()), this, SLOT(delClient(id)));
     connect(m_clients[id].socket, SIGNAL(readyRead()), this, SLOT(recv(id)));
@@ -282,7 +283,7 @@ int Application_server::clientJoinChannel(quint64 client_identifier, quint64 cha
 {
     if (findChannelIdAmongClient(client_identifier) > -1)
     {
-        std::cout << "ERREUR : CLIENT ALREADY HAS A CHANNEL!\n";
+        qDebug()<< "ERREUR : CLIENT ALREADY HAS A CHANNEL!";
         return (0xfff1);
     }
     else
@@ -303,7 +304,7 @@ int Application_server::clientLeaveChannel(quint64 client_identifier, quint64 ch
 {
     if (findChannelIdAmongClient(client_identifier) < 0)
     {
-        std::cout << "ERREUR : CLIENT HAS NO CHANNEL!\n";
+        qDebug()<< "ERREUR : CLIENT HAS NO CHANNEL!";
         return (0xfff2);
     }
     else
@@ -426,7 +427,7 @@ int Application_server::processing(QByteArray m, int client_id)
         }
         else
         {
-            std::cout << "Erreur dans la lecture du flux de donnees.\n";
+            qDebug()<< "Erreur dans la lecture du flux de donnees.";
         }
     }
     return (0);

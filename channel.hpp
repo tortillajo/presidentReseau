@@ -1,7 +1,7 @@
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 #include <QtCore/QCoreApplication>
-#include <iostream>
+#include <QDebug>
 
 typedef struct s_channel_client s_channel_client;
 struct s_channel_client
