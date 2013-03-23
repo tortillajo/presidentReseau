@@ -83,6 +83,7 @@ class Application_server : public QObject
     private:
         int clientJoinChannel(quint64 client_identifier, quint64 channel_identifier);
         int clientLeaveChannel(quint64 client_identifier, quint64 channel_identifier);
+        int clientRename(int client_id, QString pseudo, quint64 channel_identifier);
         int processing(QByteArray m, int client_id); // on traite les messages recus.
 
         //methodes privees

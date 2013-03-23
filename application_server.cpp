@@ -339,6 +339,21 @@ int Application_server::clientLeaveChannel(quint64 client_identifier, quint64 ch
 }
 
 /*
+** renomme le client
+*/
+int Application_server::clientRename(int client_id, QString pseudo, quint64 channel_identifier)
+{
+    QString pseudo_old;
+    QByteArray message_send;
+
+    pseudo_old = m_clients[client_id].client.pseudo();
+    m_clients[client_id].client.setPseudo(pseudo);
+
+    message_send = QString("CLIENT RENAME " + pseudo_old + " " + pseudo).toUtf8();
+    sendChannel(message_send, channel_identifier);
+}
+
+/*
 ** NORMES : mots clef séparés par des espaces
 ** s : server
 ** c : client
@@ -375,15 +390,7 @@ int Application_server::processing(QByteArray m, int client_id)
 
         if (message_recv[0] == "NAME")
         {
-            QString pseudo;
-            QString pseudo_old;
-
-            pseudo = message_recv[1];
-            pseudo_old = m_clients[client_id].client.pseudo();
-            m_clients[client_id].client.setPseudo(pseudo);
-
-            message_send = QString("CLIENT RENAME " + pseudo_old + " " + pseudo).toUtf8();
-            sendChannel(message_send, channel_identifier);
+            clientRename(client_id, message_recv[1], channel_identifier);
         }
         else if (message_recv[0] == "JOIN")
         {
