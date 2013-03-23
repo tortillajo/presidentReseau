@@ -2,7 +2,16 @@
 
 Application_server::Application_server()
 {
-    m_server->listen(QHostAddress::Any,9033);
+    m_server = new QTcpServer;
+    if (m_server->listen(QHostAddress::Any,9033))
+    {
+        qDebug() << "Server start successfull!";
+        connect(m_server, SIGNAL(newConnection()), this, SLOT(newClient()));
+    }
+    else
+    {
+        qDebug() << m_server->errorString();
+    }
 }
 
 /*
@@ -137,33 +146,37 @@ int Application_server::findChannelIdAmongClient(quint64 client_identifier)
 /*
 ** ajouter un client au serveur
 */
-int Application_server::newClient()
+void Application_server::newClient()
 {
     s_application_client client;
     quint64 client_identifier;
     int id;
+    QSignalMapper* signalMapper = new QSignalMapper (this);
 
-    qDebug()<< "New connexion";
+    qDebug()<< "New connexion!";
     m_clients.append(client);
     client_identifier = client.client.identifier();
     id = findClientId(client_identifier);
     m_clients[id].socket = m_server->nextPendingConnection();
 
-    qDebug()<< "ADDING THE CLIENT. SYNCHRONISATION'S COMPLETE' !";
+    connect(m_clients[id].socket, SIGNAL(disconnected()), signalMapper, SLOT(map()));
 
-    connect(m_clients[id].socket, SIGNAL(disconnected()), this, SLOT(delClient(id)));
-    connect(m_clients[id].socket, SIGNAL(readyRead()), this, SLOT(recv(id)));
-    return (0);
+    signalMapper->setMapping(m_clients[id].socket, id);
+
+    connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(delClient(int)));
+
+    qDebug()<< "ADDING THE CLIENT. SYNCHRONISATION'S COMPLETED !";
+    return;
 }
 
 /*
 ** Enleve le client de la liste
 ** et en informe les autres clients du channel
 */
-int Application_server::delClient(int client_id)
+void Application_server::delClient(int client_id)
 {
     if (client_id < 0)
-        return (-1);
+        return;
 
     int channel_id;
     quint64 channel_identifier;
@@ -179,7 +192,7 @@ int Application_server::delClient(int client_id)
     }
     m_clients.removeAt(client_id);
 
-    return (0);
+    return;
 }
 
 /*

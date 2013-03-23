@@ -3,6 +3,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtNetwork>
 #include <QDebug>
+#include <QSignalMapper>
 #include "channel.hpp"
 #include "client.hpp"
 
@@ -25,12 +26,12 @@ class Application_server : public QObject
         int findChannelId(quint64 channel_identifier);
         int findChannelIdAmongClient(quint64 client_identifier);
 
-        int newClient();
-        int delClient(int client_id);
         int newChannel();
         int delChannel(int channel_id);
-    signals:
-    private slots:
+
+    public slots:
+        void newClient();
+        void delClient(int client_id);
         // TODO : Doit envoyer des messages !
         void recv(int client_id);
         void channelSendToClient(QString m, quint64 channel_identifier);
