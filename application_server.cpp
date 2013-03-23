@@ -151,7 +151,8 @@ void Application_server::newClient()
     s_application_client client;
     quint64 client_identifier;
     int id;
-    QSignalMapper* signalMapper = new QSignalMapper (this);
+    QSignalMapper* signalDelClient = new QSignalMapper (this);
+    QSignalMapper* signalRecv = new QSignalMapper (this);
 
     qDebug()<< "New connexion!";
     m_clients.append(client);
@@ -159,11 +160,14 @@ void Application_server::newClient()
     id = findClientId(client_identifier);
     m_clients[id].socket = m_server->nextPendingConnection();
 
-    connect(m_clients[id].socket, SIGNAL(disconnected()), signalMapper, SLOT(map()));
+    connect(m_clients[id].socket, SIGNAL(disconnected()), signalDelClient, SLOT(map()));
+    connect(m_clients[id].socket, SIGNAL(readyRead()), signalRecv, SLOT(map()));
 
-    signalMapper->setMapping(m_clients[id].socket, id);
+    signalDelClient->setMapping(m_clients[id].socket, id);
+    signalRecv->setMapping(m_clients[id].socket, id);
 
-    connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(delClient(int)));
+    connect(signalDelClient, SIGNAL(mapped(int)), this, SLOT(delClient(int)));
+    connect(signalRecv, SIGNAL(mapped(int)), this, SLOT(recv(int)));
 
     qDebug()<< "ADDING THE CLIENT. SYNCHRONISATION'S COMPLETED !";
     return;
