@@ -68,10 +68,11 @@ class Channel : public QObject
         int addClient(quint64 client_identifier);
         int delClient(quint64 client_identifier);
 
+        void clientReady(quint64 client_identifier, bool value);
+
         int play(QString card, quint64 client_identifier);
 
     private slots:
-        void clientReady(quint64 client_identifier, bool value);
         void start();
 
     signals:

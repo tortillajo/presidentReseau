@@ -336,12 +336,8 @@ int Application_server::clientLeaveChannel(quint64 client_identifier, quint64 ch
 }
 
 /*
-**
-** TODO : Developper le protocole sortant (comment reépondre)
-**
 ** ******************
-** NORMES :
-** [ data<var1:var2> ]
+** NORMES : mots clef séparés par des espaces
 ** s : server
 ** c : client
 ** C : channel
@@ -352,38 +348,7 @@ int Application_server::clientLeaveChannel(quint64 client_identifier, quint64 ch
 ** l : list
 ** x : parameter
 ** e : error (notice ! -> table README.md)
-**
-** ******************
-** RECEPTION DE MESSAGES
-** mess[0] :
-**      n = request name (pseudo)
-**      C = request channel
-**      g = <before/after> joined channel
-**      p = play
-**      e = erreur
-**
-** n : [ n<pseudo> ]
-** C : [ C<id> ]
-** g : [ gl ] (liste des channels) ou
-**     [ gx<info> ] (change les params)
-**         <info> -> [ <c/C><params>:<value> ]
-**               c -> personnel
-**               C -> params du chann
-**               params -> nom du params val
-** p : [ p<cartes> ]
-** e : [ e<num> ]
-**
-** ******************
-** ENVOIE DE MESSAGES
-**
-** mess[0] :
-**      s = server notification (clients, ...)
-**      c = channel notification (params)
-**      p = game notification (card, ...)
-**
-** s : [s<type><arg1:arg2:arg3:...>]
-**      scq<identifier> : server client quit identifier
-**      sCd             : server Channel deconnexion
+** error (notice ! -> table README.md)
  */
 int Application_server::processing(QByteArray m, int client_id)
 {
@@ -392,6 +357,7 @@ int Application_server::processing(QByteArray m, int client_id)
     quint64 client_identifier;
     quint64 channel_identifier;
     QByteArray message_send;
+    QByteArray message_recv;
 
     client_identifier = m_clients[client_id].client.identifier();
     channel_id = findChannelIdAmongClient(client_identifier);
@@ -403,44 +369,35 @@ int Application_server::processing(QByteArray m, int client_id)
     }
     else
     {
-        QByteArray message_recv;
-        message_recv = m.right(m.size() - 1);
+        message_recv = m.split(" ");
 
-        if (m[0] == 'n')
+        if (message_recv[0] == "NAME")
         {
-            QByteArray pseudo;
-            pseudo = message_recv;
-            message_send = QString("cc:pseudo:" + pseudo).toUtf8();
+            QString pseudo;
+            QString pseudo_old;
 
+            pseudo = message_recv[1];
+            pseudo_old = m_clients[client_id].client.pseudo();
             m_clients[client_id].client.setPseudo(pseudo);
-            err = sendChannel(message_send, channel_identifier);
-            if (!err)
-            {
-                sendClient("e", client_id); // TODO...
-            }
+
+            message_send = QString("CLIENT RENAME " + pseud_do_old + " " + pseudo).toUtf8();
+            sendChannel(message_send, channel_identifier);
         }
-        else if (m[0] == 'C')
+        else if (message_recv[0] == "JOIN")
         {
-            channel_identifier = message_recv.toLongLong();
+            channel_identifier = message_recv[1].toLongLong();
             err = clientJoinChannel(client_identifier, channel_identifier);
-            message_send = QString("e" + QString::number(err)).toUtf8();
+            message_send = QString("ERROR " + QString::number(err)).toUtf8();
             sendClient(message_send, client_id);
             // TODO...
         }
-        else if (m[0] == 'g')
+        else if (message_recv[0] == "READY")
         {
-            if (m[1] == 'b')
-            {
-                // TODO : envoyer la liste des chann
-            }
-            else if (m[1] == 'a')
-            {
-                // TODO : changer des params
-            }
+            m_channels[channel_id]->clientReady(client_identifier, true);
         }
-        else if (m[0] == 'p')
+        else if (message_recv[0] == "NOTREADY")
         {
-            m_channels[channel_id]->play(message_recv, client_identifier);
+            m_channels[channel_id]->clientReady(client_identifier, false);
         }
         else
         {
