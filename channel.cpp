@@ -128,17 +128,24 @@ int Channel::addClient(quint64 client_identifier)
     {
         if (m_params[1].toInt() > m_params[3].toInt())
         {
-            s_channel_client client;
-            client.identifier = client_identifier;
-            client.ready = false;
-            m_clients.append(client);
-            m_params[1] = QString(m_params[1].toInt() + 1);
-            return (0);
+            if (m_started == false)
+            {
+                s_channel_client client;
+                client.identifier = client_identifier;
+                client.ready = false;
+                m_clients.append(client);
+                m_params[1] = QString(m_params[1].toInt() + 1);
+                return (0);
+            }
+            else
+            {
+                qDebug()<< "ERROR : GAME ALREADY STARTED\n";
+            }
         }
         else
         {
             qDebug()<< "ERROR : MAX NUMBER OF CLIENT CHANNEL HAS ALREADY BEEN"
-                      << "REACHED.";
+                      << "REACHED.\n";
             return (0xff13);
         }
     }

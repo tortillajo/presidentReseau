@@ -43,6 +43,7 @@ struct s_channel_client
 ** m_round
 ** incrémenté à chaque fois qu'un joueur joue (gestion du tour)
 **
+**
 ** DOCUMENTATION : GESTION DES CARTES
 ** les cartes sont représentées par un nombre de 8 bits
 ** octet :    utilisation :
