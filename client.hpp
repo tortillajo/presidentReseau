@@ -5,6 +5,13 @@
 #include <QDebug>
 #include "channel.hpp"
 
+/*
+** DOCUMENTATION : GESTION DES CARTES
+** les cartes sont représentées par un nombre de 8 bits
+** octet :    utilisation :
+** 1-4   :    valeur (1-13, 11=J, 12=D, 13=K)
+** 5-8   :    couleur (1=coeur,2=pic,4=trefle,8=carreau)
+*/
 class Client
 {
     public:
@@ -29,16 +36,5 @@ class Client
         QByteArray m_data;
 
         QList< quint16> m_cards;
-        /* attribuer un nombre a chaque carte ?
-            en fonction de sa valeur ?
-            2 quartet :
-            1er quartet = valeur
-            1-10 , 11 valet , 12 dame , 13 roi ?
-            2eme quartet = couleur ( 1 2 4 8 )
-            bit 1 trefle
-            bit 2 pic
-            bit 3 carreau
-            bit 4 coeur ?
-          */
 };
 #endif // CLIENT_HPP
