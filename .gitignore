@@ -16,3 +16,4 @@
 moc_*
 #Makefile
 PresidentReseau.pro.user
+Makefile*

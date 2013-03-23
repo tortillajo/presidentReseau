@@ -10,6 +10,46 @@ struct s_channel_client
     bool ready;
 };
 
+/*
+** DOCUMENTATION : LES METHODES DE LA CLASSE
+**
+** listClientIdentifier()
+** recuperer la liste des identifiant des clients du channel
+**
+** howManyClient()
+** renvoie au nombre de clients du channel
+**
+** clientIncluded(quint64 client_identifier)
+** tester si le client client_identifier est inclue dans le channel
+**
+** findClientId(quint64 client_identifier)
+** trouve l'id du client client_identifier
+**
+** clientsAreReady()
+** teste si tous les clients sont prets à jouer.
+**
+** start()
+** lance la partie : distribution des cartes, tour, ...
+**
+** play(QString card, quint64 client_identifier)
+** client_identifier essaye joue la carte card
+**
+**
+** DOCUMENTATION : ATTRIBUTS DE LA CLASSE
+**
+** m_p_identifierShortedByRound
+** liste des identifiants des joueurs triés dans l'ordre de jeu. (0 commence)
+**
+** m_round
+** incrémenté à chaque fois qu'un joueur joue (gestion du tour)
+**
+** DOCUMENTATION : GESTION DES CARTES
+** les cartes sont représentées par un nombre de 8 bits
+** octet :    utilisation :
+** 1-4   :    valeur (1-13, 11=J, 12=D, 13=K)
+** 5-8   :    couleur (1=coeur,2=pic,4=trefle,8=carreau)
+*/
+
 class Channel : public QObject
 {
     Q_OBJECT
@@ -43,11 +83,13 @@ class Channel : public QObject
         **  params[n+1] = valeur de la cle
         */
         QList< QString> m_params;
-        QList< quint64> m_p_identifierShortedByRound; /* NOTICE : Faire une fonction capable
-                                          ** d'envoyer à la fin l'id qui vient
-                                          ** de jouer :) L'id en gaut de la
-                                          ** liste joue les autres attendent.
-                                          */
+        QList< quint64> m_p_identifierShortedByRound;
+        quint64 m_round;
+        /* NOTICE : Faire une fonction capable
+        ** d'envoyer à la fin l'id qui vient
+        ** de jouer :) L'id en gaut de la
+        ** liste joue les autres attendent.
+        */
 
         quint64 m_identifier;
         QList< s_channel_client> m_clients;

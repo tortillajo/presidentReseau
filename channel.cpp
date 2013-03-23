@@ -15,6 +15,7 @@
 Channel::Channel()
 {
     m_identifier = (qrand() << (32)) + qrand() ;
+    m_round = 0;
     m_params << "nclientsmax";
     m_params << "4";
     m_params << "nclientsconnected";
