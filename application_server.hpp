@@ -41,6 +41,9 @@ struct s_application_client
 ** clientLeaveChannel(..)
 ** supprimer le client du channel
 **
+** clientRename(..) PROCESSING
+** renome le client, en informe le channel, etc...
+**
 ** processing(..)
 ** traitement du message recu
 **
