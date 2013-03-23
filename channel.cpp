@@ -121,7 +121,7 @@ int Channel::addClient(quint64 client_identifier)
 {
     if (!clientIncluded(client_identifier))
     {
-        qDebug()<< "ERROR : CLIENT IS ALREADY PRESENT ON THIS CHANNEL.";
+        qDebug()<< "ERROR : CLIENT IS ALREADY PRESENT ON THIS CHANNEL!";
         return (0xff11);
     }
     else
@@ -139,13 +139,13 @@ int Channel::addClient(quint64 client_identifier)
             }
             else
             {
-                qDebug()<< "ERROR : GAME ALREADY STARTED\n";
+                qDebug()<< "ERROR : GAME ALREADY STARTED!";
             }
         }
         else
         {
             qDebug()<< "ERROR : MAX NUMBER OF CLIENT CHANNEL HAS ALREADY BEEN"
-                      << "REACHED.\n";
+                      << "REACHED.!";
             return (0xff13);
         }
     }
@@ -167,7 +167,7 @@ int Channel::delClient(quint64 client_identifier)
     }
     else
     {
-        qDebug()<< "ERROR : CLIENT IS NOT PRESENT ON THIS CHANNEL.";
+        qDebug()<< "ERROR : CLIENT IS NOT PRESENT ON THIS CHANNEL!";
         return (0xff12);
     }
     return (0xffff);
