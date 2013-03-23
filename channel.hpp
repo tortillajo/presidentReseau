@@ -25,10 +25,10 @@ struct s_channel_client
 ** findClientId(quint64 client_identifier)
 ** trouve l'id du client client_identifier
 **
-** clientsAreReady()
+** SLOT clientsAreReady()
 ** teste si tous les clients sont prets à jouer.
 **
-** start()
+** SLOT start()
 ** lance la partie : distribution des cartes, tour, ...
 **
 ** play(QString card, quint64 client_identifier)

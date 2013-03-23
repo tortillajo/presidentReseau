@@ -14,6 +14,49 @@ struct s_application_client
     QTcpSocket *socket;
 };
 
+/*
+** DOCUMENTATION : LES METHODES DE LA CLASSE
+**
+** sendClient(QByteArray m, int client_id)
+** envoie le message m au client dont l'id est client_id
+**
+** sendChannel(QByteArray m, int channel_id)
+** envoie le message m à chaque client du channel dont l'id est channel_id
+**
+** findClientId(quint64 client_identifier)
+** trouver l'id du client dont l'identifiant est client_identifier
+**
+** findChannelId(quint64 channel_identifier)
+** trouver l'id du channel dont l'identifiant est channel_identifier
+**
+** findChannelIdAmongClient(quint64 client_identifier)
+** trouver channel contientant le client dont l'identi est client_identifiant
+**
+** SLOT channelSendToClient(..)
+** le channel envoie un message a tous ses clients
+**
+** clientJoinChannel(..)
+** ajouter le client au channel
+**
+** clientLeaveChannel(..)
+** supprimer le client du channel
+**
+** processing(..)
+** traitement du message recu
+**
+**
+** DOCUMENTATION : LES METHODES DE LA CLASSE
+**
+** m_server
+** Serveur TCP
+**
+** m_channels
+** liste de tous les channels (objets=Channel)
+**
+** m_clients
+** liste des clients (structure=s_application_client)
+*/
+
 class Application_server : public QObject
 {
     Q_OBJECT
