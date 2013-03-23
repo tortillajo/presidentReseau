@@ -125,7 +125,7 @@ int Application_server::findChannelId(quint64 channel_identifier)
 
 /*
 ** trouver l'id du channel auquel apartient le client
-** si pas de channel , renvoie -1
+** si pas de channel , renvoie 0
 */
 int Application_server::findChannelIdAmongClient(quint64 client_identifier)
 {
@@ -140,7 +140,7 @@ int Application_server::findChannelIdAmongClient(quint64 client_identifier)
         }
         i++;
     }
-    return (-1);
+    return (0);
 }
 
 /*
@@ -188,11 +188,15 @@ void Application_server::delClient(int client_id)
     channel_id = findChannelIdAmongClient(client_id);
     channel_identifier = m_channels[channel_id]->identifier();
 
-    if (channel_identifier != -1)
+    if (channel_identifier != 0)
     {
         QByteArray message;
         message = QString("scq" + QString::number(channel_identifier)).toUtf8();
         sendChannel(message, findChannelId(channel_identifier));
+    }
+    else
+    {
+        //TODO
     }
     m_clients.removeAt(client_id);
 
@@ -211,7 +215,6 @@ int Application_server::newChannel()
 
 /*
 ** Enleve le channel de la liste
-** TODO : Kicker les clients du channel
 */
 int Application_server::delChannel(int channel_id)
 {
@@ -266,7 +269,7 @@ void Application_server::recv(int client_id)
 
 /*
 ** slot permettant a un channel(identifier) d'envoyer un message a un client
-** ou à l'ensemble de ses clients
+** ou à l'ensemble de ses clients.
 */
 void Application_server::channelSendToClient(QString m, quint64 channel_identifier)
 {
@@ -298,17 +301,17 @@ void Application_server::channelSendToClient(QString m, quint64 channel_identifi
 */
 int Application_server::clientJoinChannel(quint64 client_identifier, quint64 channel_identifier)
 {
-    if (findChannelIdAmongClient(client_identifier) > -1)
+    if (findChannelIdAmongClient(client_identifier) > 0)
     {
         qDebug()<< "ERREUR : CLIENT ALREADY HAS A CHANNEL!";
         return (0xfff1);
     }
     else
     {
-        int id_channel;
+        int channel_id;
 
-        id_channel = findChannelId(channel_identifier);
-        m_channels[id_channel]->addClient(client_identifier);
+        channel_id = findChannelId(channel_identifier);
+        m_channels[channel_id]->addClient(client_identifier);
         return (0);
     }
     return (0xffff);
@@ -336,7 +339,6 @@ int Application_server::clientLeaveChannel(quint64 client_identifier, quint64 ch
 }
 
 /*
-** ******************
 ** NORMES : mots clef séparés par des espaces
 ** s : server
 ** c : client
@@ -352,12 +354,12 @@ int Application_server::clientLeaveChannel(quint64 client_identifier, quint64 ch
  */
 int Application_server::processing(QByteArray m, int client_id)
 {
-    int err;
+    int notice;
     int channel_id;
     quint64 client_identifier;
     quint64 channel_identifier;
     QByteArray message_send;
-    QByteArray message_recv;
+    QList<QByteArray> message_recv;
 
     client_identifier = m_clients[client_id].client.identifier();
     channel_id = findChannelIdAmongClient(client_identifier);
@@ -369,7 +371,7 @@ int Application_server::processing(QByteArray m, int client_id)
     }
     else
     {
-        message_recv = m.split(" ");
+        message_recv = m.split(' ');
 
         if (message_recv[0] == "NAME")
         {
@@ -380,16 +382,15 @@ int Application_server::processing(QByteArray m, int client_id)
             pseudo_old = m_clients[client_id].client.pseudo();
             m_clients[client_id].client.setPseudo(pseudo);
 
-            message_send = QString("CLIENT RENAME " + pseud_do_old + " " + pseudo).toUtf8();
+            message_send = QString("CLIENT RENAME " + pseudo_old + " " + pseudo).toUtf8();
             sendChannel(message_send, channel_identifier);
         }
         else if (message_recv[0] == "JOIN")
         {
             channel_identifier = message_recv[1].toLongLong();
-            err = clientJoinChannel(client_identifier, channel_identifier);
-            message_send = QString("ERROR " + QString::number(err)).toUtf8();
+            notice = clientJoinChannel(client_identifier, channel_identifier);
+            message_send = QString("NOTICE " + QString::number(notice)).toUtf8();
             sendClient(message_send, client_id);
-            // TODO...
         }
         else if (message_recv[0] == "READY")
         {
@@ -399,9 +400,13 @@ int Application_server::processing(QByteArray m, int client_id)
         {
             m_channels[channel_id]->clientReady(client_identifier, false);
         }
+        else if (message_recv[0] == "PLAY ")
+        {
+            //TODO play
+        }
         else
         {
-            qDebug()<< "Erreur dans la lecture du flux de donnees.";
+            qDebug()<< "Erreur dans la lecture du flux de données.";
         }
     }
     return (0);
