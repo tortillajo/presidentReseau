@@ -23,7 +23,7 @@ Channel::Channel()
     m_params << "title";
     m_params << "Unknow";
     // TODO : Ajouter des params
-    connect(this, SIGNAL(readyToBegin()), this, SLOT(play()));
+    connect(this, SIGNAL(readyToBegin()), this, SLOT(start()));
 }
 
 /*
@@ -99,6 +99,8 @@ int Channel::findClientId(quint64 client_identifier)
 
 /*
 ** dit si tous les clients sont prets ou non.
+** Il retourne a VRAI par defaut, mais s'il y a UN client non-pret,
+** retourne à FAUX
 */
 bool Channel::clientsAreReady()
 {
