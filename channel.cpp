@@ -49,6 +49,14 @@ quint64 Channel::identifier() const
 }
 
 /*
+** retourne la valeur du params[id]
+*/
+QString Channel::params(int params_id)
+{
+    return (m_params[params_id]);
+}
+
+/*
 ** combien le channel possede-t'il de client ?
 */
 int Channel::howManyClient() const

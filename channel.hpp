@@ -61,6 +61,7 @@ class Channel : public QObject
         Channel();
         QList< quint64> listClientIdentifier();
         quint64 identifier() const;
+        QString params(int params_id);
         int howManyClient() const;
 
         bool clientIncluded(quint64 client_identifier) const;

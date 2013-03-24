@@ -356,6 +356,22 @@ int Application_server::clientRename(int client_id, QString pseudo, quint64 chan
     qDebug() << message_send;
 }
 
+QList< s_application_channel> Application_server::listAllChannel()
+{
+    QList< s_application_channel> list;
+    s_application_channel channel;
+
+    for (int i = 0; i < m_channels.size(); i++)
+    {
+        channel.identifier = m_channels[i]->identifier();
+        channel.nclients_connected = m_channels[i]->params(3).toInt();
+        channel.nclients_max = m_channels[i]->params(1).toInt();
+        channel.title = m_channels[i]->params(5);
+        list.append(channel);
+    }
+    return (list);
+}
+
 /*
 ** NORMES : mots clef séparés par des espaces
 ** server
@@ -424,6 +440,11 @@ int Application_server::processing(QByteArray m, int client_id)
             {
                 message_send = QString("NOTICE " + QString::number(0xff01)).toUtf8();
             }
+        }
+        else if (message_recv[0] == "LIST")
+        {
+            message_send = NULL;
+            sendClient(message_send, client_id);
         }
         else
         {
