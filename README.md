@@ -51,13 +51,10 @@ Messages d'erreur
 Les messages d'erreur sont simplement des notifications (pas forcement probléma-
 -tiques).
 
-0xff11 : [NOTIC] client déjà present dans le channel
-
-0xff12 : [NOTIC] client non present dans le channel
-
-0xff13 : [NOTIC] max client atteint dans le channel
-
-0xfff1 : [CRITI] erreur de synchronisation
-
-0xffff : [GRAVE] unknow error
+0xff01 : [NOTIC] message non valide : nb d'arguments trop court (ctb)
+0xff11 : [NOTIC] channel : client déjà present dans le channel
+0xff12 : [NOTIC] channel : client non present dans le channel
+0xff13 : [NOTIC] channel : max client atteint dans le channel
+0xfff1 : [CRITI] server : erreur de synchronisation
+0xffff : [GRAVE] unknow : unknow error
 

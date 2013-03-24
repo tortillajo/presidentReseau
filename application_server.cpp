@@ -407,9 +407,21 @@ int Application_server::processing(QByteArray m, int client_id)
         {
             m_channels[channel_id]->clientReady(client_identifier, false);
         }
-        else if (message_recv[0] == "PLAY ")
+        else if (message_recv[0] == "PLAY")
         {
-            //TODO play
+            if (message_recv.size() >= 2)
+            {
+                QString cards;
+
+                for (int i = 1; i < message_recv.size(); i++)
+                    cards += message_recv[i] + " ";
+
+                m_channels[channel_id]->play(cards, client_identifier);
+            }
+            else
+            {
+                message_send = QString("NOTICE " + QString::number(0xff01)).toUtf8();
+            }
         }
         else
         {

@@ -1,8 +1,11 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
+
 #include <QtCore/QCoreApplication>
+
 #include <QTcpSocket>
 #include <QDebug>
+
 #include "channel.hpp"
 
 /*
@@ -12,6 +15,7 @@
 ** 1-4   :    valeur (1-13, 11=J, 12=D, 13=K)
 ** 5-8   :    couleur (1=coeur,2=pic,4=trefle,8=carreau)
 */
+
 class Client
 {
     public:
