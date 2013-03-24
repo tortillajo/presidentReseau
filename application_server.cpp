@@ -19,7 +19,7 @@ Application_server::Application_server()
 */
 int Application_server::sendClient(QByteArray m, int client_id)
 {
-    QByteArray paquet;
+    QByteArray  paquet;
     QDataStream mess_stream(&paquet, QIODevice::WriteOnly);
 
     if (client_id >= 0)
@@ -53,7 +53,7 @@ int Application_server::sendClient(QByteArray m, int client_id)
 */
 int Application_server::sendChannel(QByteArray m, int channel_id)
 {
-    QByteArray paquet;
+    QByteArray  paquet;
     QDataStream mess_stream(&paquet, QIODevice::WriteOnly);
 
     if (channel_id >= 0)
@@ -148,11 +148,11 @@ int Application_server::findChannelIdAmongClient(quint64 client_identifier)
 */
 void Application_server::newClient()
 {
-    s_application_client client;
-    quint64 client_identifier;
-    int id;
-    QSignalMapper* signalDelClient = new QSignalMapper (this);
-    QSignalMapper* signalRecv = new QSignalMapper (this);
+    s_application_client    client;
+    quint64                 client_identifier;
+    int                     id;
+    QSignalMapper*          signalDelClient = new QSignalMapper (this);
+    QSignalMapper*          signalRecv = new QSignalMapper (this);
 
     qDebug()<< "New connexion!";
     m_clients.append(client);
@@ -182,11 +182,12 @@ void Application_server::delClient(int client_id)
     if (client_id < 0)
         return;
 
-    int channel_id;
+    int     channel_id;
     quint64 channel_identifier;
-    client_id = m_clients[client_id].client.identifier();
-    channel_id = findChannelIdAmongClient(client_id);
-    channel_identifier = m_channels[channel_id]->identifier();
+
+    client_id           = m_clients[client_id].client.identifier();
+    channel_id          = findChannelIdAmongClient(client_id);
+    channel_identifier  = m_channels[channel_id]->identifier();
 
     if (channel_identifier != 0)
     {
@@ -222,6 +223,7 @@ int Application_server::delChannel(int channel_id)
         return (-1);
 
     QList< quint64> client_list;
+
     client_list = m_channels[channel_id]->listClientIdentifier();
     sendChannel("sCq", channel_id);
 
@@ -242,7 +244,7 @@ int Application_server::delChannel(int channel_id)
 */
 void Application_server::recv(int client_id)
 {
-    QByteArray mess;
+    QByteArray  mess;
     QDataStream mess_r(m_clients[client_id].socket);
 
     if (m_clients[client_id].client.dataSize() == 0)
@@ -276,8 +278,8 @@ void Application_server::channelSendToClient(QString m, quint64 channel_identifi
     if (channel_identifier == 0)
     {
         QList< quint64> identifierList;
-        int channel_id;
-        int i;
+        int             channel_id;
+        int             i;
 
         channel_id = findChannelId(channel_identifier);
         identifierList = m_channels[channel_id]->listClientIdentifier();
@@ -303,7 +305,7 @@ int Application_server::clientJoinChannel(quint64 client_identifier, quint64 cha
 {
     if (findChannelIdAmongClient(client_identifier) > 0)
     {
-        qDebug()<< "ERREUR : CLIENT ALREADY HAS A CHANNEL!";
+        qDebug() << "ERREUR : CLIENT ALREADY HAS A CHANNEL!";
         return (0xfff1);
     }
     else
@@ -343,12 +345,11 @@ int Application_server::clientLeaveChannel(quint64 client_identifier, quint64 ch
 */
 int Application_server::clientRename(int client_id, QString pseudo, quint64 channel_identifier)
 {
-    QString pseudo_old;
-    QByteArray message_send;
+    QString     pseudo_old;
+    QByteArray  message_send;
 
     pseudo_old = m_clients[client_id].client.pseudo();
     m_clients[client_id].client.setPseudo(pseudo);
-
     message_send = QString("CLIENT RENAME " + pseudo_old + " " + pseudo).toUtf8();
     sendChannel(message_send, channel_identifier);
 }
@@ -369,16 +370,16 @@ int Application_server::clientRename(int client_id, QString pseudo, quint64 chan
  */
 int Application_server::processing(QByteArray m, int client_id)
 {
-    int notice;
-    int channel_id;
-    quint64 client_identifier;
-    quint64 channel_identifier;
-    QByteArray message_send;
-    QList<QByteArray> message_recv;
+    int                 notice;
+    int                 channel_id;
+    quint64             client_identifier;
+    quint64             channel_identifier;
+    QByteArray          message_send;
+    QList<QByteArray>   message_recv;
 
-    client_identifier = m_clients[client_id].client.identifier();
-    channel_id = findChannelIdAmongClient(client_identifier);
-    channel_identifier = m_channels[channel_id]->identifier();
+    client_identifier   = m_clients[client_id].client.identifier();
+    channel_id          = findChannelIdAmongClient(client_identifier);
+    channel_identifier  = m_channels[channel_id]->identifier();
 
     if (m.size() < 2)
     {
