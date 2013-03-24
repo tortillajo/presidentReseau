@@ -393,9 +393,11 @@ QString Application_server::listAllChannel()
 ** quit
 ** join
 ** get
-** list
+** LIST
 ** parameter
 ** error (notice ! -> table README.md)
+**
+** LIST : LIST nb_channels nb_params <listAllChannel()>
  */
 int Application_server::processing(QByteArray m, int client_id)
 {
