@@ -14,8 +14,8 @@
  */
 Channel::Channel()
 {
-    m_identifier = (qrand() << (32)) + qrand() ;
-    m_round = 0;
+    m_identifier    = ((qrand() << (32)) + qrand()) | 1;
+    m_round         = 0;
     m_params << "nclientsmax";
     m_params << "4";
     m_params << "nclientsconnected";
@@ -131,10 +131,11 @@ int Channel::addClient(quint64 client_identifier)
             if (m_started == false)
             {
                 s_channel_client client;
-                client.identifier = client_identifier;
-                client.ready = false;
+
+                client.identifier   = client_identifier;
+                client.ready        = false;
                 m_clients.append(client);
-                m_params[1] = QString(m_params[1].toInt() + 1);
+                m_params[1]         = QString(m_params[1].toInt() + 1);
                 return (0);
             }
             else
@@ -160,9 +161,9 @@ int Channel::delClient(quint64 client_identifier)
     if (clientIncluded(client_identifier))
     {
         int id;
-        id = findClientId(client_identifier);
-        m_clients.removeAt(id);
+        id          = findClientId(client_identifier);
         m_params[1] = QString(m_params[1].toInt() - 1);
+        m_clients.removeAt(id);
         return (0);
     }
     else

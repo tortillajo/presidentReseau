@@ -270,7 +270,7 @@ void Application_server::recv(int client_id)
 }
 
 /*
-** slot permettant a un channel(identifier) d'envoyer un message a un client
+** SLOT un channel (channel_identifier) envoie un message a un client
 ** ou à l'ensemble de ses clients.
 */
 void Application_server::channelSendToClient(QString m, quint64 channel_identifier)
@@ -299,7 +299,7 @@ void Application_server::channelSendToClient(QString m, quint64 channel_identifi
 }
 
 /*
-** le client tente de joindre le channel. Tester et executer
+** PRIVATE PROCESSING : le client tente de joindre le channel. Tester et executer
 */
 int Application_server::clientJoinChannel(quint64 client_identifier, quint64 channel_identifier)
 {
@@ -320,7 +320,7 @@ int Application_server::clientJoinChannel(quint64 client_identifier, quint64 cha
 }
 
 /*
-** le client tente de quitter le channel. Tester et executer
+** PRIVATE PROCESSING : le client tente de quitter le channel. Tester et executer
 */
 int Application_server::clientLeaveChannel(quint64 client_identifier, quint64 channel_identifier)
 {
@@ -341,7 +341,7 @@ int Application_server::clientLeaveChannel(quint64 client_identifier, quint64 ch
 }
 
 /*
-** renomme le client
+** PRIVATE PROCESSING : renomme le client
 */
 int Application_server::clientRename(int client_id, QString pseudo, quint64 channel_identifier)
 {
@@ -356,16 +356,15 @@ int Application_server::clientRename(int client_id, QString pseudo, quint64 chan
 
 /*
 ** NORMES : mots clef séparés par des espaces
-** s : server
-** c : client
-** C : channel
-** p : play
-** q : quit
-** j : join
-** g : get
-** l : list
-** x : parameter
-** e : error (notice ! -> table README.md)
+** server
+** client
+** channel
+** play
+** quit
+** join
+** get
+** list
+** parameter
 ** error (notice ! -> table README.md)
  */
 int Application_server::processing(QByteArray m, int client_id)

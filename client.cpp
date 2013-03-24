@@ -10,7 +10,7 @@
  */
 Client::Client()
 {
-    m_identifier = (qrand() << (32)) + qrand() ;
+    m_identifier = ((qrand() << (32)) + qrand()) | 1;
 }
 
 Client::~Client()
