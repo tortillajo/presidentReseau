@@ -140,13 +140,13 @@ int Channel::addClient(quint64 client_identifier)
             }
             else
             {
-                qDebug()<< "ERROR : GAME ALREADY STARTED!";
+                qDebug() << "ERROR : GAME ALREADY STARTED!";
             }
         }
         else
         {
-            qDebug()<< "ERROR : MAX NUMBER OF CLIENT CHANNEL HAS ALREADY BEEN"
-                      << "REACHED.!";
+            qDebug() << "ERROR : MAX NUMBER OF CLIENT CHANNEL HAS ALREADY BEEN"
+                     << "REACHED.!";
             return (0xff13);
         }
     }

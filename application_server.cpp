@@ -43,7 +43,7 @@ int Application_server::sendClient(QByteArray m, int client_id)
     }
     else
     {
-        qDebug()<< "ERROR : UNABLE TO DO THAT !";
+        qDebug()<< "[NOTIC] : UNABLE TO DO THAT !";
         return (-1);
     }
 }
@@ -59,11 +59,12 @@ int Application_server::sendChannel(QByteArray m, int channel_id)
     if (channel_id >= 0)
     {
         int i;
+        QList< quint64> identifier_id;
         i = 0;
 
         mess_stream << (quint16)m.size();
         mess_stream << m;
-        QList< quint64> identifier_id = m_channels[channel_id]->listClientIdentifier();
+        identifier_id = m_channels[channel_id]->listClientIdentifier();
 
         while (i < identifier_id.size())
         {
@@ -74,7 +75,7 @@ int Application_server::sendChannel(QByteArray m, int channel_id)
     }
     else
     {
-        qDebug()<< "ERROR : UNABLE TO DO THAT !";
+        qDebug() << "[NOTIC] : UNABLE TO DO THAT !";
         return (-1);
     }
 }
@@ -154,7 +155,7 @@ void Application_server::newClient()
     QSignalMapper*          signalDelClient = new QSignalMapper (this);
     QSignalMapper*          signalRecv = new QSignalMapper (this);
 
-    qDebug()<< "New connexion!";
+    qDebug()<< ">New connexion!";
     m_clients.append(client);
     client_identifier   = client.client.identifier();
     id                  = findClientId(client_identifier);
@@ -169,7 +170,7 @@ void Application_server::newClient()
     connect(signalDelClient, SIGNAL(mapped(int)), this, SLOT(delClient(int)));
     connect(signalRecv, SIGNAL(mapped(int)), this, SLOT(recv(int)));
 
-    qDebug()<< "ADDING THE CLIENT. SYNCHRONISATION'S COMPLETED !";
+    qDebug()<< ">ADDING THE CLIENT COMPLETED !";
     return;
 }
 
@@ -197,7 +198,7 @@ void Application_server::delClient(int client_id)
     }
     else
     {
-        //TODO
+        qDebug() << "[NOTIC] UNABLE TO DO THAT.";
     }
     m_clients.removeAt(client_id);
 
@@ -225,7 +226,7 @@ int Application_server::delChannel(int channel_id)
     QList< quint64> client_list;
 
     client_list = m_channels[channel_id]->listClientIdentifier();
-    sendChannel("sCq", channel_id);
+    sendChannel("CHANNEL DELETED " + QString::number(m_channels[channel_id]->identifier()).toUtf8(), channel_id);
 
     while (!client_list.isEmpty())
     {
@@ -305,7 +306,7 @@ int Application_server::clientJoinChannel(quint64 client_identifier, quint64 cha
 {
     if (findChannelIdAmongClient(client_identifier) > 0)
     {
-        qDebug() << "ERREUR : CLIENT ALREADY HAS A CHANNEL!";
+        qDebug() << "[NOTIC] : CLIENT ALREADY HAS A CHANNEL!";
         return (0xfff1);
     }
     else
@@ -352,6 +353,7 @@ int Application_server::clientRename(int client_id, QString pseudo, quint64 chan
     m_clients[client_id].client.setPseudo(pseudo);
     message_send = QString("CLIENT RENAME " + pseudo_old + " " + pseudo).toUtf8();
     sendChannel(message_send, channel_identifier);
+    qDebug() << message_send;
 }
 
 /*
@@ -425,7 +427,7 @@ int Application_server::processing(QByteArray m, int client_id)
         }
         else
         {
-            qDebug()<< "Erreur dans la lecture du flux de données.";
+            qDebug()<< "[NOTIC] Erreur dans la lecture du flux de données.";
         }
     }
     return (0);
