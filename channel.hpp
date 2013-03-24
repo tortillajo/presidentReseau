@@ -88,16 +88,16 @@ class Channel : public QObject
         */
         QList< QString> m_params;
         QList< quint64> m_p_identifierShortedByRound;
-        quint64 m_round;
+        quint64         m_round;
         /* NOTICE : Faire une fonction capable
         ** d'envoyer à la fin l'id qui vient
         ** de jouer :) L'id en gaut de la
         ** liste joue les autres attendent.
         */
 
-        quint64 m_identifier;
+        quint64         m_identifier;
         QList< s_channel_client> m_clients;
-        bool m_started; // -1 si termine, 0 si pas encore lance, 1 si en cours
+        bool            m_started;
 
 };
 

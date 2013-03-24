@@ -33,11 +33,11 @@ class Client
 
         bool operator==(Client const& client);
     private:
-        quint64 m_identifier;
-        QString m_pseudo;
-        quint64 m_channel_identifier;
-        quint16 m_dataSize;
-        QByteArray m_data;
+        quint64     m_identifier;
+        QString     m_pseudo;
+        quint64     m_channel_identifier;
+        quint16     m_dataSize;
+        QByteArray  m_data;
 
         QList< quint16> m_cards;
 };

@@ -156,8 +156,8 @@ void Application_server::newClient()
 
     qDebug()<< "New connexion!";
     m_clients.append(client);
-    client_identifier = client.client.identifier();
-    id = findClientId(client_identifier);
+    client_identifier   = client.client.identifier();
+    id                  = findClientId(client_identifier);
     m_clients[id].socket = m_server->nextPendingConnection();
 
     connect(m_clients[id].socket, SIGNAL(disconnected()), signalDelClient, SLOT(map()));
@@ -396,8 +396,8 @@ int Application_server::processing(QByteArray m, int client_id)
         else if (message_recv[0] == "JOIN")
         {
             channel_identifier = message_recv[1].toLongLong();
-            notice = clientJoinChannel(client_identifier, channel_identifier);
-            message_send = QString("NOTICE " + QString::number(notice)).toUtf8();
+            notice          = clientJoinChannel(client_identifier, channel_identifier);
+            message_send    = QString("NOTICE " + QString::number(notice)).toUtf8();
             sendClient(message_send, client_id);
         }
         else if (message_recv[0] == "READY")
