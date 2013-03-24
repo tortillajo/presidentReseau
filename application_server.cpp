@@ -356,20 +356,32 @@ int Application_server::clientRename(int client_id, QString pseudo, quint64 chan
     qDebug() << message_send;
 }
 
-QList< s_application_channel> Application_server::listAllChannel()
+/*
+** PRIVATE PROCESSING : renvoie à la liste en QString des params
+*/
+QString Application_server::listAllChannel()
 {
     QList< s_application_channel> list;
     s_application_channel channel;
+    QString message;
 
     for (int i = 0; i < m_channels.size(); i++)
     {
         channel.identifier = m_channels[i]->identifier();
-        channel.nclients_connected = m_channels[i]->params(3).toInt();
         channel.nclients_max = m_channels[i]->params(1).toInt();
+        channel.nclients_connected = m_channels[i]->params(3).toInt();
         channel.title = m_channels[i]->params(5);
         list.append(channel);
     }
-    return (list);
+
+    for (int i = 0; i < list.size(); i++)
+    {
+        message += list[i].identifier + " ";
+        message += list[i].nclients_max + " ";
+        message += list[i].nclients_connected + " ";
+        message += list[i].title + " ";
+    }
+    return message;
 }
 
 /*
@@ -443,7 +455,11 @@ int Application_server::processing(QByteArray m, int client_id)
         }
         else if (message_recv[0] == "LIST")
         {
-            message_send = NULL;
+
+            message_send += "LIST " +
+                            QString::number(m_channels.size()) +
+                            QString::number(NB_PARAMS);
+            message_send += listAllChannel();
             sendClient(message_send, client_id);
         }
         else

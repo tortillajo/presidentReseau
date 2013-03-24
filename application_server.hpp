@@ -1,6 +1,9 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
+// NOMBRE DE PARAMS DISPONIBLES DANS : s_application_channel
+#define NB_PARAMS 4
+
 #include <QtCore/QCoreApplication>
 
 #include <QtNetwork>
@@ -102,7 +105,7 @@ class Application_server : public QObject
         int clientJoinChannel(quint64 client_identifier, quint64 channel_identifier);
         int clientLeaveChannel(quint64 client_identifier, quint64 channel_identifier);
         int clientRename(int client_id, QString pseudo, quint64 channel_identifier);
-        QList<s_application_channel> listAllChannel();
+        QString listAllChannel();
         int processing(QByteArray m, int client_id); // on traite les messages recus.
 
     private:
